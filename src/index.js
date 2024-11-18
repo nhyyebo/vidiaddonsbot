@@ -6,7 +6,6 @@ require('dotenv').config();
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Basic health check endpoint
 app.get('/', (req, res) => {
@@ -14,6 +13,7 @@ app.get('/', (req, res) => {
 });
 
 // Start Express server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
@@ -90,6 +90,7 @@ client.on('interactionCreate', async interaction => {
     if (!command) return;
 
     try {
+        await interaction.deferReply({ ephemeral: true });
         // Send notification before executing command
         await notifyOwner(interaction, 'success');
         
