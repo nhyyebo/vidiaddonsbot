@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+require('dotenv').config();
 
-const WEBSITE_URL = 'https://vidibot.netlify.app';
+const WEBSITE_URL = process.env.WEBSITE_URL;
 
 module.exports = {
     data: new SlashCommandBuilder()

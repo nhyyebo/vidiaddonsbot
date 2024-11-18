@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+require('dotenv').config();
 
-const APP_URL = 'https://vidibot.netlify.app/download';
+const APP_URL = process.env.APP_STORE_URL;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,10 +16,7 @@ module.exports = {
                 .setDescription('Get the Vidi app for your platform:')
                 .addFields(
                     { name: 'Platforms', value: 
-                        '• Windows\n' +
-                        '• macOS\n' +
-                        '• Linux\n' +
-                        '• Android\n' +
+                        '• ATV\n' +
                         '• iOS (coming soon)'
                     }
                 )
