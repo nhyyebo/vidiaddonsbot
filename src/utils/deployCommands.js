@@ -1,6 +1,7 @@
 const { REST, Routes } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 async function deployCommands() {
     try {
@@ -30,11 +31,14 @@ async function deployCommands() {
         );
 
         console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-        return true;
     } catch (error) {
         console.error('Error deploying commands:', error);
-        return false;
     }
+}
+
+// Execute if run directly
+if (require.main === module) {
+    deployCommands();
 }
 
 module.exports = { deployCommands };
