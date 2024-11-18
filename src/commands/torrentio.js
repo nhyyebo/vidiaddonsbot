@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://torrentio.strem.fun/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/torrentio';
 const CONFIGURE_URL = 'https://torrentio.strem.fun/configure';
 
 module.exports = {
@@ -18,8 +18,7 @@ module.exports = {
                     '• Access to a large library of torrent files\n' +
                     '• Support for multiple debrid services\n' +
                     '• Easy to use interface'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your debrid service.' }
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -36,19 +35,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'torrentio_install') {
-            await interaction.editReply({
-                content: `To install Torrentio, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

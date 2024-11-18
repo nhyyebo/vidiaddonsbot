@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://94c8cb9f702d-tmdb-addon.baby-beamup.club/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/tmdb';
 const CONFIGURE_URL = 'https://94c8cb9f702d-tmdb-addon.baby-beamup.club/configure';
 
 module.exports = {
@@ -15,12 +15,10 @@ module.exports = {
             .setDescription('A metadata addon that provides access to The Movie Database\'s vast library of movie and TV show information.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to The Movie Database\'s vast library\n' +
-                    '• Detailed information about titles\n' +
-                    '• Cast and crew information\n' +
-                    '• Ratings and reviews'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your API key.' }
+                    '• Access to The Movie Database\'s vast library of movie and TV show information\n' +
+                    '• Detailed information about titles, including cast, crew, and ratings\n' +
+                    '• Easy to use interface'
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -37,19 +35,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'tmdb_install') {
-            await interaction.editReply({
-                content: `To install TMDB, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

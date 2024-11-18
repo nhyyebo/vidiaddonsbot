@@ -1,8 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('discord.js');
 
-const MANIFEST_URL = 'vidi://jackett.elfhosted.com/manifest.json';
-const CONFIGURE_URL = 'https://jackett.elfhosted.com/configure';
+const MANIFEST_URL = 'https://vidibot.netlify.app/jackett';
+const CONFIGURE_URL = 'https://jackettio.elfhosted.com/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,15 +12,14 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Jackett')
-            .setDescription('A powerful addon that integrates with Jackett to provide access to multiple torrent sources.')
+            .setDescription('Access multiple torrent trackers through Jackett.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Multiple torrent sources\n' +
-                    '• High-quality content\n' +
+                    '• Multiple torrent trackers\n' +
+                    '• High-quality streams\n' +
                     '• Regular updates\n' +
                     '• Easy configuration'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your Jackett instance.' }
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -38,19 +36,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'jackett_install') {
-            await interaction.editReply({
-                content: `To install Jackett, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

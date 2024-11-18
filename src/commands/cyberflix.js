@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://cyberflix.elfhosted.com/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/cyberflix';
 const CONFIGURE_URL = 'https://cyberflix.elfhosted.com/configure';
 
 module.exports = {

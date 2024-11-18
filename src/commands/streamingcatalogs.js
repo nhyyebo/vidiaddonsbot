@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://7a82163c306e-stremio-netflix-catalog-addon.baby-beamup.club/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/streamingcatalogs';
 const CONFIGURE_URL = 'https://7a82163c306e-stremio-netflix-catalog-addon.baby-beamup.club/configure';
 
 module.exports = {
@@ -16,11 +16,9 @@ module.exports = {
             .addFields(
                 { name: 'Features', value: 
                     '• Access to a large library of streaming services\n' +
-                    '• Detailed information about titles\n' +
-                    '• Cast and crew details\n' +
+                    '• Detailed information about titles, including cast, crew, and ratings\n' +
                     '• Easy to use interface'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your streaming services.' }
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -37,7 +35,7 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });

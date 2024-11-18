@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('path');
 
-const MANIFEST_URL = 'vidi://2ecbbd610840-opensubtitles.baby-beamup.club/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/opensubtitles';
 const CONFIGURE_URL = 'https://opensubtitlesv3-pro.dexter21767.com/configure/';
 
 module.exports = {
@@ -16,11 +16,10 @@ module.exports = {
             .setDescription('A subtitle addon that provides access to OpenSubtitles\' vast library of subtitles.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to OpenSubtitles\' vast library\n' +
+                    '• Access to OpenSubtitles\' vast library of subtitles\n' +
                     '• Support for multiple languages\n' +
                     '• Easy to use interface'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your OpenSubtitles account.' }
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -34,6 +33,10 @@ module.exports = {
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')
+                    .setStyle(ButtonStyle.Link),
+                new ButtonBuilder()
+                    .setURL('https://www.opensubtitles.org/en/register')
+                    .setLabel('Get OpenSubtitles Account')
                     .setStyle(ButtonStyle.Link)
             );
 

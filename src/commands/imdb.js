@@ -1,27 +1,27 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('path');
 
-const MANIFEST_URL = 'vidi://1fe84bc728af-imdb-catalogs.baby-beamup.club/manifest.json';
-const CONFIGURE_URL = 'https://imdb.elfhosted.com/configure';
+const MANIFEST_URL = 'https://vidibot.netlify.app/imdb';
+
+const CONFIGURE_URL = 'https://1fe84bc728af-imdb-catalogs.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('imdb')
-        .setDescription('Install IMDb Catalogs addon'),
+        .setDescription('Install and configure IMDb addon'),
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('IMDb Catalogs')
-            .setDescription('A catalog addon that provides access to IMDb\'s vast library of movie and TV show information.')
+            .setDescription('Access IMDb\'s extensive movie and TV show catalog.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to IMDb\'s vast library\n' +
-                    '• Detailed information about titles\n' +
-                    '• Cast and crew details\n' +
-                    '• Easy to use interface'
-                },
-                { name: 'Installation', value: 'Click Install to add this addon to your Vidi player. No configuration required.' }
+                    '• Extensive movie and TV catalog\n' +
+                    '• IMDb ratings and reviews\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -30,7 +30,11 @@ module.exports = {
             .addComponents(
                 new ButtonBuilder()
                     .setURL(MANIFEST_URL)
-                    .setLabel('Install IMDB')
+                    .setLabel('Install IMDb')
+                    .setStyle(ButtonStyle.Link),
+                new ButtonBuilder()
+                    .setURL(CONFIGURE_URL)
+                    .setLabel('Configure')
                     .setStyle(ButtonStyle.Link)
             );
 

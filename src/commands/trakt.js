@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://2ecbbd610840-trakt.baby-beamup.club/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/trakt';
 const CONFIGURE_URL = 'https://2ecbbd610840-trakt.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('trakt')
-        .setDescription('Install and configure Trakt.tv addon'),
+        .setDescription('Install and configure Trakt addon'),
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
@@ -15,12 +15,9 @@ module.exports = {
             .setDescription('A catalog addon that provides access to Trakt.tv\'s vast library of movie and TV show information.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to Trakt\'s vast library\n' +
-                    '• Movie and TV show lists\n' +
-                    '• Personal catalogs\n' +
+                    '• Access to Trakt\'s vast library of movie and TV show lists and catalogs\n' +
                     '• Easy to use interface'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your Trakt.tv account.' }
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -37,19 +34,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'trakt_install') {
-            await interaction.editReply({
-                content: `To install Trakt, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

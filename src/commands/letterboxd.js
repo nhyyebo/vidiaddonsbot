@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://letterboxd.almosteffective.com/manifest.json';
-const CONFIGURE_URL = 'https://letterboxd.almosteffective.com/configure';
+const MANIFEST_URL = 'https://vidibot.netlify.app/letterboxd';
+const CONFIGURE_URL = 'https://addons.almosteffective.com/configure/letterboxd';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,15 +12,14 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Letterboxd')
-            .setDescription('A catalog addon that provides access to Letterboxd\'s vast library of movie information.')
+            .setDescription('Access your Letterboxd watchlist and reviews.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to Letterboxd\'s vast library\n' +
-                    '• Detailed movie information\n' +
-                    '• Cast and crew details\n' +
-                    '• Ratings and reviews'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your Letterboxd account.' }
+                    '• Letterboxd integration\n' +
+                    '• Watchlist sync\n' +
+                    '• Reviews and ratings\n' +
+                    '• Easy configuration'
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -37,19 +36,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'letterboxd_install') {
-            await interaction.editReply({
-                content: `To install Letterboxd, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

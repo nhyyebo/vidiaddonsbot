@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
-const MANIFEST_URL = 'vidi://mediafusion.elfhosted.com/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/mediafusion';
 const CONFIGURE_URL = 'https://mediafusion.elfhosted.com/configure';
 
 module.exports = {
@@ -13,15 +12,13 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('MediaFusion')
-            .setDescription('A powerful addon that aggregates content from multiple sources.')
+            .setDescription('A debrid link addon that provides access to a wide range of media files.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Multiple content sources\n' +
-                    '• High-quality streams\n' +
-                    '• Regular updates\n' +
-                    '• Easy configuration'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your preferences.' }
+                    '• Access to a large library of media files\n' +
+                    '• Support for multiple debrid services\n' +
+                    '• Easy to use interface'
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -38,19 +35,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'mediafusion_install') {
-            await interaction.editReply({
-                content: `To install MediaFusion, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

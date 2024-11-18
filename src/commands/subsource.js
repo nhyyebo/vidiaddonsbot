@@ -1,13 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('path');
 
-const MANIFEST_URL = 'vidi://subsource.strem.bar/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/subsource';
 const CONFIGURE_URL = 'https://subsource.strem.bar/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('subsource')
-        .setDescription('Install and configure SubSource Subtitles addon'),
+        .setDescription('Install and configure SubSource addon'),
     
     async execute(interaction) {
         try {
@@ -17,11 +17,10 @@ module.exports = {
                 .setDescription('A subtitle addon that provides access to SubSource\'s vast library of subtitles.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Access to SubSource\'s vast library\n' +
+                        '• Access to SubSource\'s vast library of subtitles\n' +
                         '• Support for multiple languages\n' +
                         '• Easy to use interface'
-                    },
-                    { name: 'Installation', value: 'Click Configure to set up this addon with your SubSource account.' }
+                    }
                 )
                 .setFooter({ text: 'Vidi Addons' })
                 .setTimestamp();
@@ -50,9 +49,5 @@ module.exports = {
                 ephemeral: true
             });
         }
-    },
-
-    async handleButton(interaction) {
-        // Removed the handleButton function as it's no longer needed
     }
 };

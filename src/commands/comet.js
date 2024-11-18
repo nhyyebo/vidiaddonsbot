@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'vidi://comet.elfhosted.com/manifest.json';
+const MANIFEST_URL = 'https://vidibot.netlify.app/comet';
 const CONFIGURE_URL = 'https://comet.elfhosted.com/configure';
 
 module.exports = {
@@ -12,15 +12,13 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Comet')
-            .setDescription('A powerful addon that provides access to multiple streaming sources.')
+            .setDescription('A debrid link addon that provides access to a wide range of media files.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Multiple streaming sources\n' +
-                    '• High-quality content\n' +
-                    '• Regular updates\n' +
-                    '• Easy configuration'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your preferences.' }
+                    '• Access to a large library of media files\n' +
+                    '• Support for multiple debrid services\n' +
+                    '• Easy to use interface'
+                }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -37,19 +35,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'comet_install') {
-            await interaction.editReply({
-                content: `To install Comet, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };
