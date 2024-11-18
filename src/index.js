@@ -1,4 +1,4 @@
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -38,6 +38,47 @@ for (const file of commandFiles) {
     }
 }
 
+// Function to send command usage notification to owner
+async function notifyOwner(interaction, status = 'success', error = null) {
+    try {
+        const ownerId = process.env.OWNER_ID;
+        if (!ownerId) {
+            console.error('Owner ID not configured in environment variables');
+            return;
+        }
+
+        const embed = new EmbedBuilder()
+            .setColor(status === 'success' ? '#00ff00' : '#ff0000')
+            .setTitle(`Command ${status === 'success' ? 'Used' : 'Error'}`)
+            .addFields(
+                { name: 'Command', value: `/${interaction.commandName}` },
+                { name: 'User', value: `${interaction.user.tag} (${interaction.user.id})` },
+                { name: 'Server', value: interaction.guild.name },
+                { name: 'Channel', value: interaction.channel.name }
+            )
+            .setTimestamp();
+
+        // Add command options if any
+        const options = [];
+        interaction.options.data.forEach(option => {
+            options.push(`${option.name}: ${option.value}`);
+        });
+        if (options.length > 0) {
+            embed.addFields({ name: 'Options', value: options.join('\n') });
+        }
+
+        // Add error information if present
+        if (error) {
+            embed.addFields({ name: 'Error', value: `\`\`\`${error.message}\`\`\`` });
+        }
+
+        const owner = await client.users.fetch(ownerId);
+        await owner.send({ embeds: [embed] });
+    } catch (e) {
+        console.error('Failed to send command usage notification:', e);
+    }
+}
+
 client.once('ready', () => {
     console.log('Bot is ready!');
 });
@@ -49,9 +90,16 @@ client.on('interactionCreate', async interaction => {
     if (!command) return;
 
     try {
+        // Send notification before executing command
+        await notifyOwner(interaction, 'success');
+        
+        // Execute the command
         await command.execute(interaction);
     } catch (error) {
         console.error(`Error executing command ${interaction.commandName}:`, error);
+        
+        // Send error notification
+        await notifyOwner(interaction, 'error', error);
         
         // Only try to reply if the interaction hasn't been replied to yet
         if (!interaction.replied && !interaction.deferred) {
