@@ -7,22 +7,21 @@ const CONFIGURE_URL = 'https://easynews.elfhosted.com/configure';
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('easynews')
-        .setDescription('Install and configure Easynews addon'),
+        .setDescription('Install and configure EasyNews addon'),
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('Easynews Addon')
-            .setThumbnail('attachment://easynews-modified.png')
-            .setDescription('Access high-quality content from Easynews directly in Vidi.')
+            .setTitle('EasyNews')
+            .setDescription('A powerful addon that provides access to EasyNews content.')
             .addFields(
                 { name: 'Features', value: 
-                    '• High-speed downloads\n' +
-                    '• Large content library\n' +
-                    '• Multiple quality options\n' +
-                    '• Global server network'
+                    '• Access to EasyNews content\n' +
+                    '• High-quality streams\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 },
-                { name: 'Installation', value: 'Click Configure to set up your Easynews account, then Install to add the addon to your Vidi player.' }
+                { name: 'Installation', value: 'Click Install to add EasyNews to your Vidi player.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -30,9 +29,9 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('easynews_install')
-                    .setLabel('Install Easynews')
-                    .setStyle(ButtonStyle.Primary),
+                    .setURL(MANIFEST_URL)
+                    .setLabel('Install EasyNews')
+                    .setStyle(ButtonStyle.Link),
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')
@@ -43,12 +42,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'easynews-modified.png');
-
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

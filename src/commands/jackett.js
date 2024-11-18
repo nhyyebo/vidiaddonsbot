@@ -29,9 +29,9 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('jackett_install')
+                    .setURL(MANIFEST_URL)
                     .setLabel('Install Jackett')
-                    .setStyle(ButtonStyle.Primary),
+                    .setStyle(ButtonStyle.Link),
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')

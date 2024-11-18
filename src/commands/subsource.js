@@ -29,9 +29,9 @@ module.exports = {
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setCustomId('subsource_install')
+                        .setURL(MANIFEST_URL)
                         .setLabel('Install SubSource')
-                        .setStyle(ButtonStyle.Primary),
+                        .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
                         .setLabel('Configure')
@@ -53,12 +53,6 @@ module.exports = {
     },
 
     async handleButton(interaction) {
-        if (interaction.customId === 'subsource_install') {
-            await interaction.editReply({
-                content: `To install SubSource, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
+        // Removed the handleButton function as it's no longer needed
     }
 };

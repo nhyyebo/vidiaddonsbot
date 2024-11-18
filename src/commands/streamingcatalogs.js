@@ -28,9 +28,9 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('streamingcatalogs_install')
+                    .setURL(MANIFEST_URL)
                     .setLabel('Install Streaming Catalogs')
-                    .setStyle(ButtonStyle.Primary),
+                    .setStyle(ButtonStyle.Link),
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')
@@ -41,15 +41,5 @@ module.exports = {
             embeds: [embed],
             components: [row]
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'streamingcatalogs_install') {
-            await interaction.editReply({
-                content: `To install Streaming Catalogs, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

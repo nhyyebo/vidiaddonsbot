@@ -1,27 +1,27 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('path');
 
-const MANIFEST_URL = 'vidi://anime-kitsu.elfhosted.com/manifest.json';
-const CONFIGURE_URL = 'https://kitsu.elfhosted.com/configure';
+const MANIFEST_URL = 'vidi://animekitsu.strem.fun/manifest.json';
+const CONFIGURE_URL = 'https://animekitsu.strem.fun/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('animekitsu')
-        .setDescription('Install and configure Kitsu addon'),
+        .setDescription('Install and configure AnimeKitsu addon'),
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('Kitsu Anime Addon')
-            .setDescription('Access a vast library of anime content through Kitsu.')
+            .setTitle('AnimeKitsu')
+            .setDescription('A powerful anime addon that provides access to Kitsu\'s vast library.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Extensive anime library\n' +
-                    '• Detailed metadata\n' +
+                    '• Access to Kitsu\'s anime library\n' +
+                    '• High-quality content\n' +
                     '• Regular updates\n' +
-                    '• User ratings and reviews'
+                    '• Easy configuration'
                 },
-                { name: 'Installation', value: 'Click Install to add Kitsu to your Vidi player, or Configure to customize settings.' }
+                { name: 'Installation', value: 'Click Install to add AnimeKitsu to your Vidi player.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -29,9 +29,9 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('kitsu_install')
-                    .setLabel('Install Kitsu')
-                    .setStyle(ButtonStyle.Primary),
+                    .setURL(MANIFEST_URL)
+                    .setLabel('Install AnimeKitsu')
+                    .setStyle(ButtonStyle.Link),
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')

@@ -29,9 +29,9 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('imdb_install')
-                    .setLabel('Install IMDb Catalogs')
-                    .setStyle(ButtonStyle.Primary)
+                    .setURL(MANIFEST_URL)
+                    .setLabel('Install IMDB')
+                    .setStyle(ButtonStyle.Link)
             );
 
         await interaction.editReply({

@@ -32,9 +32,9 @@ module.exports = {
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setCustomId('cinemeta_install')
+                        .setURL(MANIFEST_URL)
                         .setLabel('Install Cinemeta')
-                        .setStyle(ButtonStyle.Primary)
+                        .setStyle(ButtonStyle.Link)
                 );
 
             await interaction.editReply({
