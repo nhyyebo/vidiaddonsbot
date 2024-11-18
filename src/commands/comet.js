@@ -1,4 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const path = require('path');
 
 const MANIFEST_URL = 'vidi://comet.elfhosted.com/manifest.json';
 const CONFIGURE_URL = 'https://comet.elfhosted.com/configure';
@@ -38,10 +39,12 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
+            const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'comet-modified.png');
+            
             await interaction.reply({
                 embeds: [embed],
                 components: [row],
-                files: ['./addonicons/comet-modified.png'],
+                files: [iconPath],
                 ephemeral: true
             });
         } catch (error) {
@@ -55,13 +58,8 @@ module.exports = {
 
     async handleButton(interaction) {
         if (interaction.customId === 'comet_install') {
-            const installEmbed = new EmbedBuilder()
-                .setColor('#00ff00')
-                .setTitle('Install Comet')
-                .setDescription(`Click [here](${MANIFEST_URL}) to install Comet.\n\nMake sure you have:\n1. Vidi installed on your device\n2. Configured your debrid service`);
-
             await interaction.reply({
-                embeds: [installEmbed],
+                content: `To install Comet, click this link:\n${MANIFEST_URL}`,
                 ephemeral: true
             });
         }

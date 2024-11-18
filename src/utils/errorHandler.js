@@ -1,4 +1,4 @@
-const { logError } = require('../commands/logs');
+const { logError } = require('./logger');
 
 // Validate interaction object
 function validateInteraction(interaction) {
@@ -29,18 +29,17 @@ async function safeReply(interaction, content, options = {}) {
     try {
         if (interaction.replied || interaction.deferred) {
             return await interaction.followUp(replyOptions);
-        } else {
-            return await interaction.reply(replyOptions);
         }
+        return await interaction.reply(replyOptions);
     } catch (error) {
         console.error('Error in safeReply:', error);
         try {
-            return await interaction.channel.send({
-                ...replyOptions,
-                content: `${interaction.user}, ${content}`
+            return await interaction.followUp({
+                content: 'An error occurred while responding.',
+                ephemeral: true
             });
-        } catch (secondError) {
-            console.error('Failed to send fallback message:', secondError);
+        } catch (followUpError) {
+            console.error('Error in followUp:', followUpError);
         }
     }
 }
@@ -51,26 +50,15 @@ async function handleCommand(interaction, executeFunction) {
         validateInteraction(interaction);
         await executeFunction(interaction);
     } catch (error) {
-        console.error(`Error in command ${interaction.commandName}:`, error);
-        
-        // Log the error
+        console.error('Error executing command:', error);
+        await safeReply(interaction, '❌ An error occurred while executing this command.');
         logError(
             error.message,
             interaction.commandName,
             interaction.user,
             Date.now()
         );
-
-        // Determine user-friendly error message
-        let userMessage = 'An error occurred while executing this command.';
-        if (error.message.includes('permissions')) {
-            userMessage = 'You do not have the required permissions for this command.';
-        } else if (error.message.includes('server')) {
-            userMessage = 'This command can only be used in a server.';
-        }
-
-        // Try to send error message to user
-        await safeReply(interaction, userMessage);
+        throw error;
     }
 }
 
@@ -80,17 +68,15 @@ async function handleButton(interaction, buttonFunction) {
         validateInteraction(interaction);
         await buttonFunction(interaction);
     } catch (error) {
-        console.error(`Error in button ${interaction.customId}:`, error);
-        
-        // Log the error
+        console.error('Error handling button:', error);
+        await safeReply(interaction, '❌ An error occurred while processing this button.');
         logError(
             error.message,
             `${interaction.customId} (button)`,
             interaction.user,
             Date.now()
         );
-
-        await safeReply(interaction, 'An error occurred while handling this button.');
+        throw error;
     }
 }
 
@@ -100,28 +86,22 @@ async function handleModal(interaction, modalFunction) {
         validateInteraction(interaction);
         await modalFunction(interaction);
     } catch (error) {
-        console.error(`Error in modal ${interaction.customId}:`, error);
-        
-        // Log the error
+        console.error('Error handling modal:', error);
+        await safeReply(interaction, '❌ An error occurred while processing this form.');
         logError(
             error.message,
             `${interaction.customId} (modal)`,
             interaction.user,
             Date.now()
         );
-
-        await safeReply(interaction, 'An error occurred while processing your submission.');
+        throw error;
     }
 }
 
 // Check if interaction is from admin or owner
 function isAdminOrOwner(interaction) {
-    if (!interaction.member) return false;
-    
-    const isAdmin = interaction.member.roles.cache.has(process.env.ADMIN_ROLE_ID);
-    const isOwner = interaction.user.id === process.env.OWNER_ID;
-    
-    return isAdmin || isOwner;
+    return interaction.member.permissions.has('Administrator') || 
+           interaction.user.id === process.env.OWNER_ID;
 }
 
 module.exports = {

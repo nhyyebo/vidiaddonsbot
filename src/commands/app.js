@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const path = require('path');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -33,9 +34,11 @@ module.exports = {
                 .setFooter({ text: 'Vidi - Your Ultimate Streaming Companion' })
                 .setTimestamp();
 
+            const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'vidi.png');
+
             await interaction.reply({
                 embeds: [embed],
-                files: ['./addonicons/vidi.png'],
+                files: [iconPath],
                 ephemeral: true
             });
         } catch (error) {
