@@ -1,0 +1,3 @@
+@echo off
+echo Starting auto-commit script...
+node auto-commit.js
