@@ -13,18 +13,22 @@ module.exports = {
             .setDescription('Get the Vidi app for your platform:')
             .addFields(
                 { name: 'Platforms', value: 
-                    
                     '• ATV\n' +
-                    '• iOS '
+                    '• iOS'
                 }
             )
             .setFooter({ text: 'Vidi App' })
             .setTimestamp();
 
+        const appUrl = process.env.APP_STORE_URL;
+        if (!appUrl) {
+            throw new Error('App Store URL not configured in environment variables');
+        }
+
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setURL(process.env.APP_STORE_URL)
+                    .setURL(appUrl)
                     .setLabel('Download Vidi')
                     .setStyle(ButtonStyle.Link)
             );
