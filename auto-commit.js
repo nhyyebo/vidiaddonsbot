@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 
 // Get the current timestamp in a readable format
@@ -20,9 +21,19 @@ function runGitCommand(command) {
     });
 }
 
+// Create or update the keepalive file
+function updateKeepAliveFile() {
+    const keepAlivePath = path.join(__dirname, 'keepalive.txt');
+    const timestamp = getTimestamp();
+    fs.writeFileSync(keepAlivePath, `Last auto-commit: ${timestamp}\n`);
+}
+
 // Main function to perform git operations
 async function autoCommit() {
     try {
+        // Create a change by updating the keepalive file
+        updateKeepAliveFile();
+
         // Add all changes
         await runGitCommand('git add .');
         
