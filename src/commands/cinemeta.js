@@ -3,12 +3,11 @@ const path = require('path');
 
 const MANIFEST_URL = 'https://vidibot.netlify.app/cinemeta';
 
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cinemeta')
         .setDescription('Install Cinemeta addon'),
-    
+
     async execute(interaction) {
         try {
             logger.info(`User ${interaction.user.tag} requested Cinemeta information`);
@@ -39,7 +38,8 @@ module.exports = {
 
             await interaction.reply({
                 embeds: [embed],
-                components: [row]
+                components: [row],
+                ephemeral: true
             });
         } catch (error) {
             logger.error('Error in Cinemeta command:', error);

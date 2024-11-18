@@ -12,12 +12,12 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Letterboxd')
-            .setDescription('Access your Letterboxd watchlist and reviews.')
+            .setDescription('Access your Letterboxd watchlist and ratings.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Letterboxd integration\n' +
-                    '• Watchlist sync\n' +
-                    '• Reviews and ratings\n' +
+                    '• Sync with Letterboxd watchlist\n' +
+                    '• Access your ratings\n' +
+                    '• Regular updates\n' +
                     '• Easy configuration'
                 }
             )
@@ -38,7 +38,8 @@ module.exports = {
 
         await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 };

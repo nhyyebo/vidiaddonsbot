@@ -13,7 +13,7 @@ module.exports = {
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('IMDb Catalogs')
+            .setTitle('IMDb')
             .setDescription('Access IMDb\'s extensive movie and TV show catalog.')
             .addFields(
                 { name: 'Features', value: 
@@ -38,19 +38,10 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'imdb_install') {
-            await interaction.editReply({
-                content: `To install IMDb Catalogs, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

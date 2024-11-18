@@ -13,12 +13,13 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('OpenSubtitles')
-            .setDescription('A subtitle addon that provides access to OpenSubtitles\' vast library of subtitles.')
+            .setDescription('Access OpenSubtitles vast subtitle database.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to OpenSubtitles\' vast library of subtitles\n' +
-                    '• Support for multiple languages\n' +
-                    '• Easy to use interface'
+                    '• Extensive subtitle database\n' +
+                    '• Multiple languages\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 }
             )
             .setFooter({ text: 'Vidi Addons' })
@@ -33,26 +34,13 @@ module.exports = {
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL('https://www.opensubtitles.org/en/register')
-                    .setLabel('Get OpenSubtitles Account')
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'opensubtitles_install') {
-            await interaction.editReply({
-                content: `To install OpenSubtitles, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
-            });
-        }
     }
 };

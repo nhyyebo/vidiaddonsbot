@@ -12,11 +12,13 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Trakt.tv')
-            .setDescription('A catalog addon that provides access to Trakt.tv\'s vast library of movie and TV show information.')
+            .setDescription('Access your Trakt watchlist and collection.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to Trakt\'s vast library of movie and TV show lists and catalogs\n' +
-                    '• Easy to use interface'
+                    '• Sync with Trakt watchlist\n' +
+                    '• Access your collection\n' +
+                    '• Track watched status\n' +
+                    '• Easy configuration'
                 }
             )
             .setFooter({ text: 'Vidi Addons' })
@@ -36,7 +38,8 @@ module.exports = {
 
         await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 };

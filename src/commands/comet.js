@@ -12,12 +12,13 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Comet')
-            .setDescription('A debrid link addon that provides access to a wide range of media files.')
+            .setDescription('Access content from various streaming sources.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to a large library of media files\n' +
-                    '• Support for multiple debrid services\n' +
-                    '• Easy to use interface'
+                    '• Multiple streaming sources\n' +
+                    '• High-quality streams\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 }
             )
             .setFooter({ text: 'Vidi Addons' })
@@ -37,7 +38,8 @@ module.exports = {
 
         await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 };

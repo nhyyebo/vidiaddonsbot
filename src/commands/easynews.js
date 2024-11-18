@@ -7,17 +7,19 @@ const CONFIGURE_URL = 'https://b89262c192b0-stremio-easynews-addon.baby-beamup.c
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('easynews')
-        .setDescription('Install and configure Easy News+ addon'),
+        .setDescription('Install and configure EasyNews addon'),
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('Easy News+')
-            .setDescription('An addon that provides access to Easy News+.')
+            .setTitle('EasyNews')
+            .setDescription('Access content from EasyNews Usenet service.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to Easy News+\n' +
-                    '• Easy to use interface'
+                    '• Extensive media library\n' +
+                    '• High-speed downloads\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 }
             )
             .setFooter({ text: 'Vidi Addons' })
@@ -27,7 +29,7 @@ module.exports = {
             .addComponents(
                 new ButtonBuilder()
                     .setURL(MANIFEST_URL)
-                    .setLabel('Install Easy News+')
+                    .setLabel('Install EasyNews')
                     .setStyle(ButtonStyle.Link),
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
@@ -35,9 +37,10 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 };

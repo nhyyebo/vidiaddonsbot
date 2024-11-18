@@ -12,12 +12,13 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Streaming Catalogs')
-            .setDescription('A catalog addon that provides access to a wide range of streaming services.')
+            .setDescription('Access catalogs from various streaming services.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Access to a large library of streaming services\n' +
-                    '• Detailed information about titles, including cast, crew, and ratings\n' +
-                    '• Easy to use interface'
+                    '• Multiple streaming services\n' +
+                    '• Regular updates\n' +
+                    '• High-quality metadata\n' +
+                    '• Easy configuration'
                 }
             )
             .setFooter({ text: 'Vidi Addons' })
@@ -37,7 +38,8 @@ module.exports = {
 
         await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 };

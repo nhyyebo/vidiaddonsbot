@@ -12,11 +12,11 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Jackett')
-            .setDescription('Access multiple torrent trackers through Jackett.')
+            .setDescription('Access content from various torrent trackers.')
             .addFields(
                 { name: 'Features', value: 
                     '• Multiple torrent trackers\n' +
-                    '• High-quality streams\n' +
+                    '• Real-time search\n' +
                     '• Regular updates\n' +
                     '• Easy configuration'
                 }
@@ -38,7 +38,8 @@ module.exports = {
 
         await interaction.reply({
             embeds: [embed],
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 };

@@ -8,18 +8,19 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('subsource')
         .setDescription('Install and configure SubSource addon'),
-    
+
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('SubSource Subtitles')
-                .setDescription('A subtitle addon that provides access to SubSource\'s vast library of subtitles.')
+                .setTitle('SubSource')
+                .setDescription('Access subtitles from various sources.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Access to SubSource\'s vast library of subtitles\n' +
-                        '• Support for multiple languages\n' +
-                        '• Easy to use interface'
+                        '• Multiple subtitle sources\n' +
+                        '• Multiple languages\n' +
+                        '• Regular updates\n' +
+                        '• Easy configuration'
                     }
                 )
                 .setFooter({ text: 'Vidi Addons' })
