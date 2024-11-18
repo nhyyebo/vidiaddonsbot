@@ -10,8 +10,6 @@ module.exports = {
 
     async execute(interaction) {
         try {
-            logger.info(`User ${interaction.user.tag} requested Cinemeta information`);
-
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Cinemeta')
@@ -42,7 +40,7 @@ module.exports = {
                 ephemeral: true
             });
         } catch (error) {
-            logger.error('Error in Cinemeta command:', error);
+            console.error('Error in Cinemeta command:', error);
             await interaction.reply({ 
                 content: 'An error occurred while processing your request. Please try again later.',
                 ephemeral: true 

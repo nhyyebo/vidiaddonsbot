@@ -9,37 +9,45 @@ module.exports = {
         .setDescription('Install and configure MediaFusion addon'),
 
     async execute(interaction) {
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('MediaFusion')
-            .setDescription('Access content from various media sources.')
-            .addFields(
-                { name: 'Features', value: 
-                    '• Multiple media sources\n' +
-                    '• High-quality streams\n' +
-                    '• Regular updates\n' +
-                    '• Easy configuration'
-                }
-            )
-            .setFooter({ text: 'Vidi Addons' })
-            .setTimestamp();
+        try {
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('MediaFusion')
+                .setDescription('Access content from various streaming sources.')
+                .addFields(
+                    { name: 'Features', value: 
+                        '• Multiple streaming sources\n' +
+                        '• High-quality streams\n' +
+                        '• Regular updates\n' +
+                        '• Easy configuration'
+                    }
+                )
+                .setFooter({ text: 'Vidi Addons' })
+                .setTimestamp();
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setURL(MANIFEST_URL)
-                    .setLabel('Install MediaFusion')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL(CONFIGURE_URL)
-                    .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link)
-            );
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setURL(MANIFEST_URL)
+                        .setLabel('Install MediaFusion')
+                        .setStyle(ButtonStyle.Link),
+                    new ButtonBuilder()
+                        .setURL(CONFIGURE_URL)
+                        .setLabel('Configure')
+                        .setStyle(ButtonStyle.Link)
+                );
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        });
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
+        } catch (error) {
+            console.error('Error in MediaFusion command:', error);
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
+        }
     }
 };

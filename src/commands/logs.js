@@ -1,8 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { handleCommand } = require('../utils/errorHandler');
 const { hasRequiredRole } = require('../utils/permissions');
-const fs = require('fs').promises;
-const path = require('path');
 
 // Store command usage and errors in memory with timestamps
 const commandLogs = [];
@@ -65,67 +63,60 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('logs')
         .setDescription('View bot logs (Staff only)')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+        .addStringOption(option =>
+            option.setName('type')
+                .setDescription('Type of logs to view')
+                .setRequired(true)
+                .addChoices(
+                    { name: 'Commands', value: 'commands' },
+                    { name: 'Errors', value: 'errors' },
+                    { name: 'All', value: 'all' }
+                )),
 
     async execute(interaction) {
-        // Check for required role
-        if (!await hasRequiredRole(interaction)) {
-            await interaction.reply({
-                content: '❌ You do not have permission to view logs.',
-                ephemeral: true
-            });
-            return;
-        }
-
         try {
-            const logsDir = path.join(__dirname, '..', '..', 'logs');
-            const files = await fs.readdir(logsDir);
-            const logFiles = files.filter(file => file.endsWith('.log'));
+            // Check for required role
+            if (!await hasRequiredRole(interaction)) {
+                await interaction.reply({
+                    content: 'You do not have permission to use this command.',
+                    ephemeral: true
+                });
+                return;
+            }
 
-            // Create the main embed for log files
+            const logType = interaction.options.getString('type');
+            let logs = [];
+
+            switch (logType) {
+                case 'commands':
+                    logs = formatLogEntries(commandLogs, 'usage').split('\n');
+                    break;
+                case 'errors':
+                    logs = formatLogEntries(errorLogs, 'error').split('\n\n');
+                    break;
+                case 'all':
+                    logs = [...formatLogEntries(commandLogs, 'usage').split('\n'), ...formatLogEntries(errorLogs, 'error').split('\n\n')];
+                    break;
+                default:
+                    logs = ['Invalid log type specified'];
+            }
+
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('Bot Logs')
-                .setDescription('Here are the most recent logs:')
-                .addFields(
-                    { 
-                        name: '📊 Command Usage',
-                        value: formatLogEntries(commandLogs, 'usage')
-                    },
-                    { 
-                        name: '⚠️ Error Logs',
-                        value: formatLogEntries(errorLogs, 'error')
-                    }
-                )
+                .setTitle(`Bot Logs - ${logType.charAt(0).toUpperCase() + logType.slice(1)}`)
+                .setDescription('```\n' + logs.join('\n') + '\n```')
                 .setFooter({ text: 'Vidi Bot Logs' })
                 .setTimestamp();
 
-            // Create the file logs embed if there are log files
-            let fileLogsEmbed = null;
-            if (logFiles.length > 0) {
-                fileLogsEmbed = new EmbedBuilder()
-                    .setColor('#0099ff')
-                    .setTitle('Log Files')
-                    .setDescription('Recent log files:')
-                    .addFields(
-                        logFiles.map(file => ({
-                            name: file,
-                            value: `Created: ${new Date(fs.statSync(path.join(logsDir, file)).birthtime).toLocaleString()}`
-                        }))
-                    );
-            }
-
-            // Send the response with both embeds if available
             await interaction.reply({
-                embeds: fileLogsEmbed ? [embed, fileLogsEmbed] : [embed],
+                embeds: [embed],
                 ephemeral: true
             });
-
         } catch (error) {
             console.error('Error in logs command:', error);
-            await interaction.reply({
-                content: '❌ An error occurred while fetching logs.',
-                ephemeral: true
+            await interaction.reply({ 
+                content: 'An error occurred while fetching logs. Please try again later.',
+                ephemeral: true 
             });
         }
     },

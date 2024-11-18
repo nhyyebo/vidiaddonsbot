@@ -1,50 +1,51 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { handleCommand } = require('../utils/errorHandler');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('suggest')
-        .setDescription('Submit a suggestion for Vidi')
+        .setDescription('Submit a suggestion')
         .addStringOption(option =>
             option.setName('suggestion')
-                .setDescription('Your suggestion for Vidi')
+                .setDescription('Your suggestion')
                 .setRequired(true)),
 
     async execute(interaction) {
-        const suggestion = interaction.options.getString('suggestion');
-        const suggestionsChannel = interaction.client.channels.cache.get(process.env.SUGGESTIONS_CHANNEL_ID);
-
-        if (!suggestionsChannel) {
-            await interaction.editReply({
-                content: '❌ Suggestions channel not found. Please contact an administrator.',
-                ephemeral: true
-            });
-            return;
-        }
-
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('New Suggestion')
-            .setDescription(suggestion)
-            .addFields(
-                { name: 'Suggested by', value: interaction.user.tag }
-            )
-            .setFooter({ text: 'Vidi Suggestions' })
-            .setTimestamp();
-
         try {
-            const message = await suggestionsChannel.send({ embeds: [embed] });
-            await message.react('👍');
-            await message.react('👎');
+            const suggestion = interaction.options.getString('suggestion');
+            
+            // Create an embed for the suggestion
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('New Suggestion')
+                .setDescription(suggestion)
+                .addFields(
+                    { name: 'Submitted by', value: interaction.user.tag }
+                )
+                .setFooter({ text: 'Vidi Suggestions' })
+                .setTimestamp();
 
-            await interaction.editReply({
-                content: '✅ Your suggestion has been submitted! Thank you for your feedback.',
-                ephemeral: true
-            });
+            // Send the suggestion to a designated channel (if you have one)
+            const suggestionsChannel = interaction.guild.channels.cache.find(
+                channel => channel.name === 'suggestions'
+            );
+
+            if (suggestionsChannel) {
+                await suggestionsChannel.send({ embeds: [embed] });
+                await interaction.reply({
+                    content: 'Thank you for your suggestion! It has been submitted for review.',
+                    ephemeral: true
+                });
+            } else {
+                await interaction.reply({
+                    content: 'Thank you for your suggestion! However, I couldn\'t find the suggestions channel. Please contact a server administrator.',
+                    ephemeral: true
+                });
+            }
         } catch (error) {
-            await interaction.editReply({
-                content: '❌ There was an error submitting your suggestion. Please try again later.',
-                ephemeral: true
+            console.error('Error in suggest command:', error);
+            await interaction.reply({ 
+                content: 'An error occurred while processing your suggestion. Please try again later.',
+                ephemeral: true 
             });
         }
     }
