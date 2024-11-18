@@ -1,59 +1,59 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const path = require('path');
 
 const MANIFEST_URL = 'vidi://cyberflix.elfhosted.com/manifest.json';
+const CONFIGURE_URL = 'https://cyberflix.elfhosted.com/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cyberflix')
-        .setDescription('Get information about the CyberFlix addon'),
-    
+        .setDescription('Install and configure CyberFlix addon'),
+
     async execute(interaction) {
-        try {
-            const embed = new EmbedBuilder()
-                .setColor('#0099ff')
-                .setTitle('CyberFlix Addon')
-                .setThumbnail('attachment://cyber.png')
-                .setDescription('CyberFlix is a powerful streaming addon that provides access to a wide variety of content.')
-                .addFields(
-                    { name: '📝 Features', value: '• Large content library\n• High-quality streams\n• Fast loading times\n• Regular updates' },
-                    { name: '⚙️ Installation', value: 'Click Install to add the CyberFlix addon to your Vidi player.' }
-                )
-                .setFooter({ text: 'Vidi Addons' })
-                .setTimestamp();
+        const embed = new EmbedBuilder()
+            .setColor('#0099ff')
+            .setTitle('CyberFlix Addon')
+            .setThumbnail('attachment://cyberflix-modified.png')
+            .setDescription('CyberFlix is a powerful streaming addon that provides access to a vast library of content.')
+            .addFields(
+                { name: 'Features', value: 
+                    '• Large content library\n' +
+                    '• Multiple quality options\n' +
+                    '• Fast streaming\n' +
+                    '• Regular updates'
+                },
+                { name: 'Installation', value: 'Click Configure to set up your account, then Install to add the addon to your Vidi player.' }
+            )
+            .setFooter({ text: 'Vidi Addons' })
+            .setTimestamp();
 
-            const row = new ActionRowBuilder()
-                .addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('cyberflix_install')
-                        .setLabel('Install Cyberflix')
-                        .setStyle(ButtonStyle.Primary)
-                );
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId('cyberflix_install')
+                    .setLabel('Install CyberFlix')
+                    .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                    .setURL(CONFIGURE_URL)
+                    .setLabel('Configure')
+                    .setStyle(ButtonStyle.Link)
+            );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                files: ['./addonicons/cyber.png'],
-                ephemeral: true
-            });
-        } catch (error) {
-            console.error('Error in cyberflix command:', error);
-            await interaction.reply({
-                content: '❌ An error occurred while fetching addon information. Please try again later.',
-                ephemeral: true
-            });
-        }
+        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'cyberflix-modified.png');
+
+        await interaction.editReply({
+            embeds: [embed],
+            components: [row],
+            files: [iconPath]
+        });
     },
 
     async handleButton(interaction) {
         if (interaction.customId === 'cyberflix_install') {
-            const installEmbed = new EmbedBuilder()
-                .setColor('#00ff00')
-                .setTitle('Install Cyberflix')
-                .setDescription(`Click [here](${MANIFEST_URL}) to install Cyberflix Catalogs.\n\nMake sure you have Vidi installed on your device.`);
-
-            await interaction.reply({
-                embeds: [installEmbed],
-                ephemeral: true
+            await interaction.editReply({
+                content: `To install CyberFlix, click this link:\n${MANIFEST_URL}`,
+                components: [],
+                embeds: []
             });
         }
     }

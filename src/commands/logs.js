@@ -1,7 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('discord.js');
-const { isAdminOrOwner, safeReply, validateInteraction } = require('../utils/errorHandler');
-require('dotenv').config();
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { handleCommand } = require('../utils/errorHandler');
+const { hasRequiredRole } = require('../utils/permissions');
+const fs = require('fs').promises;
+const path = require('path');
 
 // Store command usage and errors in memory with timestamps
 const commandLogs = [];
@@ -63,62 +64,54 @@ function formatLogEntries(logs, type) {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('logs')
-        .setDescription('View bot usage and error logs')
-        .addStringOption(option =>
-            option.setName('type')
-                .setDescription('Type of logs to view')
-                .setRequired(true)
-                .addChoices(
-                    { name: 'Command Usage', value: 'usage' },
-                    { name: 'Errors', value: 'errors' }
-                )),
-    
-    async execute(interaction) {
-        try {
-            // Validate interaction
-            validateInteraction(interaction);
+        .setDescription('View bot logs (Staff only)')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
-            // Check permissions
-            if (!isAdminOrOwner(interaction)) {
-                return await safeReply(
-                    interaction,
-                    'You do not have permission to use this command.',
-                    { ephemeral: true }
-                );
+    async execute(interaction) {
+        if (!await hasRequiredRole(interaction)) {
+            await interaction.editReply({
+                content: '❌ You do not have permission to view logs.',
+                ephemeral: true
+            });
+            return;
+        }
+
+        try {
+            const logsDir = path.join(__dirname, '..', '..', 'logs');
+            const files = await fs.readdir(logsDir);
+            const logFiles = files.filter(file => file.endsWith('.log'));
+
+            if (logFiles.length === 0) {
+                await interaction.editReply({
+                    content: '📝 No log files found.',
+                    ephemeral: true
+                });
+                return;
             }
 
-            const logType = interaction.options.getString('type');
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
+                .setTitle('Bot Logs')
+                .setDescription('Here are the most recent log files:')
+                .addFields(
+                    logFiles.map(file => ({
+                        name: file,
+                        value: `Created: ${new Date(fs.statSync(path.join(logsDir, file)).birthtime).toLocaleString()}`
+                    }))
+                )
+                .setFooter({ text: 'Vidi Bot Logs' })
                 .setTimestamp();
 
-            if (logType === 'usage') {
-                embed.setTitle('Command Usage Logs')
-                    .setDescription('Recent command usage:')
-                    .addFields({ 
-                        name: 'Last 10 Commands',
-                        value: formatLogEntries(commandLogs, 'usage')
-                    });
-            } else {
-                embed.setTitle('Error Logs')
-                    .setDescription('Recent errors:')
-                    .addFields({ 
-                        name: 'Last 10 Errors',
-                        value: formatLogEntries(errorLogs, 'errors')
-                    });
-            }
-
-            await safeReply(interaction, null, {
+            await interaction.editReply({
                 embeds: [embed],
                 ephemeral: true
             });
         } catch (error) {
             console.error('Error in logs command:', error);
-            await safeReply(
-                interaction,
-                'An error occurred while retrieving the logs.',
-                { ephemeral: true }
-            );
+            await interaction.editReply({
+                content: '❌ An error occurred while fetching logs.',
+                ephemeral: true
+            });
         }
     },
 

@@ -1,54 +1,54 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const path = require('path');
 
-const MANIFEST_URL = 'vidi://7a82163c306e-stremio-netflix-catalog-addon.baby-beamup.club/manifest.json';
-const CONFIGURE_URL = 'https://7a82163c306e-stremio-netflix-catalog-addon.baby-beamup.club/configure';
+const MANIFEST_URL = 'vidi://streamingcatalogs.elfhosted.com/manifest.json';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('streamingcatalogs')
-        .setDescription('Install and configure Streaming Catalogs addon'),
-    
+        .setDescription('Install Streaming Catalogs addon'),
+
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('Streaming Catalogs Addon')
-            .setDescription('A catalog addon that provides access to a wide range of streaming services.')
+            .setThumbnail('attachment://streamingcatalogs-modified.png')
+            .setDescription('Access comprehensive streaming service catalogs directly in Vidi.')
             .addFields(
-                { name: 'Features', value: '• Access to multiple streaming services\n• Detailed title information\n• Ratings and recommendations\n• Easy to use interface' },
-                { name: 'Installation', value: 'Click Configure to set up your streaming services, then Install to add the addon to your Vidi player.' }
+                { name: 'Features', value: 
+                    '• Multiple streaming services\n' +
+                    '• Updated catalogs\n' +
+                    '• Service availability info\n' +
+                    '• Regional content data'
+                },
+                { name: 'Installation', value: 'Click Install to add the Streaming Catalogs addon to your Vidi player. No configuration required!' }
             )
-            .setFooter({ text: 'Vidi Addons' });
+            .setFooter({ text: 'Vidi Addons' })
+            .setTimestamp();
 
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
                     .setCustomId('streamingcatalogs_install')
                     .setLabel('Install Streaming Catalogs')
-                    .setStyle(ButtonStyle.Primary),
-                new ButtonBuilder()
-                    .setURL(CONFIGURE_URL)
-                    .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link)
+                    .setStyle(ButtonStyle.Primary)
             );
 
-        await interaction.reply({
+        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'streamingcatalogs-modified.png');
+
+        await interaction.editReply({
             embeds: [embed],
             components: [row],
-            ephemeral: true
+            files: [iconPath]
         });
     },
 
     async handleButton(interaction) {
         if (interaction.customId === 'streamingcatalogs_install') {
-            const installEmbed = new EmbedBuilder()
-                .setColor('#00ff00')
-                .setTitle('Install Streaming Catalogs')
-                .setDescription(`Click [here](${MANIFEST_URL}) to install Streaming Catalogs.\n\nMake sure you have:\n1. Vidi installed on your device\n2. Configured your streaming services`);
-
-            await interaction.reply({
-                embeds: [installEmbed],
-                ephemeral: true
+            await interaction.editReply({
+                content: `To install Streaming Catalogs, click this link:\n${MANIFEST_URL}`,
+                components: [],
+                embeds: []
             });
         }
     }

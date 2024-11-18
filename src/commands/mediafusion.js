@@ -1,5 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const path = require('path');
 
 const MANIFEST_URL = 'vidi://mediafusion.elfhosted.com/manifest.json';
 const CONFIGURE_URL = 'https://mediafusion.elfhosted.com/configure';
@@ -8,17 +8,24 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('mediafusion')
         .setDescription('Install and configure MediaFusion addon'),
-    
+
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle('MediaFusion Addon')
-            .setDescription('A debrid link addon that provides access to a wide range of media files.')
+            .setThumbnail('attachment://mediafusion-modified.png')
+            .setDescription('MediaFusion combines multiple sources to provide a comprehensive streaming experience.')
             .addFields(
-                { name: 'Features', value: '• Access to a large library of media files\n• Support for multiple debrid services\n• Easy to use interface' },
-                { name: 'Installation', value: 'Click Configure to set up your debrid service, then Install to add MediaFusion to your Vidi player.' }
+                { name: 'Features', value: 
+                    '• Multiple content sources\n' +
+                    '• Smart source selection\n' +
+                    '• High-quality streams\n' +
+                    '• Automatic fallback'
+                },
+                { name: 'Installation', value: 'Click Configure to set up your preferences, then Install to add the addon to your Vidi player.' }
             )
-            .setFooter({ text: 'Vidi Addons' });
+            .setFooter({ text: 'Vidi Addons' })
+            .setTimestamp();
 
         const row = new ActionRowBuilder()
             .addComponents(
@@ -32,23 +39,21 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.reply({
+        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'mediafusion-modified.png');
+
+        await interaction.editReply({
             embeds: [embed],
             components: [row],
-            ephemeral: true
+            files: [iconPath]
         });
     },
 
     async handleButton(interaction) {
         if (interaction.customId === 'mediafusion_install') {
-            const installEmbed = new EmbedBuilder()
-                .setColor('#00ff00')
-                .setTitle('Install MediaFusion')
-                .setDescription(`Click [here](${MANIFEST_URL}) to install MediaFusion.\n\nMake sure you have:\n1. Vidi installed on your device\n2. Configured your debrid service`);
-
-            await interaction.reply({
-                embeds: [installEmbed],
-                ephemeral: true
+            await interaction.editReply({
+                content: `To install MediaFusion, click this link:\n${MANIFEST_URL}`,
+                components: [],
+                embeds: []
             });
         }
     }

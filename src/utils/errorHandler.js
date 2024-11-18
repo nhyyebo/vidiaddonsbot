@@ -20,27 +20,20 @@ function validatePermissions(interaction, requiredPermissions = []) {
 
 // Safe reply to interaction
 async function safeReply(interaction, content, options = {}) {
-    const replyOptions = {
-        ...options,
-        content,
-        ephemeral: true // Always ephemeral by default
-    };
-
     try {
-        if (interaction.replied || interaction.deferred) {
+        const replyOptions = {
+            ...options,
+            content,
+            ephemeral: true
+        };
+
+        if (!interaction.deferred && !interaction.replied) {
+            return await interaction.reply(replyOptions);
+        } else {
             return await interaction.followUp(replyOptions);
         }
-        return await interaction.reply(replyOptions);
     } catch (error) {
         console.error('Error in safeReply:', error);
-        try {
-            return await interaction.followUp({
-                content: 'An error occurred while responding.',
-                ephemeral: true
-            });
-        } catch (followUpError) {
-            console.error('Error in followUp:', followUpError);
-        }
     }
 }
 
@@ -48,10 +41,28 @@ async function safeReply(interaction, content, options = {}) {
 async function handleCommand(interaction, executeFunction) {
     try {
         validateInteraction(interaction);
+        if (!interaction.deferred && !interaction.replied) {
+            await interaction.deferReply({ ephemeral: true });
+        }
+        
         await executeFunction(interaction);
     } catch (error) {
         console.error('Error executing command:', error);
-        await safeReply(interaction, '❌ An error occurred while executing this command.');
+        try {
+            if (!interaction.replied) {
+                await interaction.reply({
+                    content: '❌ An error occurred while executing this command.',
+                    ephemeral: true
+                });
+            } else {
+                await interaction.followUp({
+                    content: '❌ An error occurred while executing this command.',
+                    ephemeral: true
+                });
+            }
+        } catch (replyError) {
+            console.error('Error sending error message:', replyError);
+        }
         logError(
             error.message,
             interaction.commandName,
@@ -66,10 +77,28 @@ async function handleCommand(interaction, executeFunction) {
 async function handleButton(interaction, buttonFunction) {
     try {
         validateInteraction(interaction);
+        if (!interaction.deferred && !interaction.replied) {
+            await interaction.deferReply({ ephemeral: true });
+        }
+        
         await buttonFunction(interaction);
     } catch (error) {
         console.error('Error handling button:', error);
-        await safeReply(interaction, '❌ An error occurred while processing this button.');
+        try {
+            if (!interaction.replied) {
+                await interaction.reply({
+                    content: '❌ An error occurred while processing this button.',
+                    ephemeral: true
+                });
+            } else {
+                await interaction.followUp({
+                    content: '❌ An error occurred while processing this button.',
+                    ephemeral: true
+                });
+            }
+        } catch (replyError) {
+            console.error('Error sending error message:', replyError);
+        }
         logError(
             error.message,
             `${interaction.customId} (button)`,

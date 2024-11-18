@@ -36,14 +36,14 @@ module.exports = {
 
             const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'vidi.png');
 
-            await interaction.reply({
+            await interaction.editReply({
                 embeds: [embed],
                 files: [iconPath],
                 ephemeral: true
             });
         } catch (error) {
             console.error('Error in app command:', error);
-            await interaction.reply({
+            await interaction.editReply({
                 content: '❌ An error occurred while fetching app information. Please try again later.',
                 ephemeral: true
             });
