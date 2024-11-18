@@ -1,29 +1,27 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('path');
 
-const MANIFEST_URL = 'vidi://subsource.elfhosted.com/manifest.json';
-const CONFIGURE_URL = 'https://subsource.elfhosted.com/configure';
+const MANIFEST_URL = 'vidi://subsource.strem.bar/manifest.json';
+const CONFIGURE_URL = 'https://subsource.strem.bar/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('subsource')
-        .setDescription('Install and configure SubSource addon'),
+        .setDescription('Install and configure SubSource Subtitles addon'),
     
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('SubSource Addon')
-                .setThumbnail('attachment://subsource-modified.png')
-                .setDescription('Access high-quality subtitles from multiple sources directly in Vidi.')
+                .setTitle('SubSource Subtitles')
+                .setDescription('A subtitle addon that provides access to SubSource\'s vast library of subtitles.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Multiple subtitle sources\n' +
-                        '• Smart source selection\n' +
-                        '• Multiple languages\n' +
-                        '• Auto-download support'
+                        '• Access to SubSource\'s vast library\n' +
+                        '• Support for multiple languages\n' +
+                        '• Easy to use interface'
                     },
-                    { name: 'Installation', value: 'Click Configure to set up your preferences, then Install to add the addon to your Vidi player.' }
+                    { name: 'Installation', value: 'Click Configure to set up this addon with your SubSource account.' }
                 )
                 .setFooter({ text: 'Vidi Addons' })
                 .setTimestamp();
@@ -40,12 +38,9 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'subsource-modified.png');
-
             await interaction.reply({
                 embeds: [embed],
                 components: [row],
-                files: [iconPath],
                 ephemeral: true
             });
         } catch (error) {

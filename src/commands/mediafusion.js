@@ -12,17 +12,16 @@ module.exports = {
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('MediaFusion Addon')
-            .setThumbnail('attachment://mediafusion-modified.png')
-            .setDescription('MediaFusion combines multiple sources to provide a comprehensive streaming experience.')
+            .setTitle('MediaFusion')
+            .setDescription('A powerful addon that aggregates content from multiple sources.')
             .addFields(
                 { name: 'Features', value: 
                     '• Multiple content sources\n' +
-                    '• Smart source selection\n' +
                     '• High-quality streams\n' +
-                    '• Automatic fallback'
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 },
-                { name: 'Installation', value: 'Click Configure to set up your preferences, then Install to add the addon to your Vidi player.' }
+                { name: 'Installation', value: 'Click Configure to set up this addon with your preferences.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -39,12 +38,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'mediafusion-modified.png');
-
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

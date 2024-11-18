@@ -68,8 +68,9 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
     async execute(interaction) {
+        // Check for required role
         if (!await hasRequiredRole(interaction)) {
-            await interaction.editReply({
+            await interaction.reply({
                 content: '❌ You do not have permission to view logs.',
                 ephemeral: true
             });
@@ -81,34 +82,48 @@ module.exports = {
             const files = await fs.readdir(logsDir);
             const logFiles = files.filter(file => file.endsWith('.log'));
 
-            if (logFiles.length === 0) {
-                await interaction.editReply({
-                    content: '📝 No log files found.',
-                    ephemeral: true
-                });
-                return;
-            }
-
+            // Create the main embed for log files
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Bot Logs')
-                .setDescription('Here are the most recent log files:')
+                .setDescription('Here are the most recent logs:')
                 .addFields(
-                    logFiles.map(file => ({
-                        name: file,
-                        value: `Created: ${new Date(fs.statSync(path.join(logsDir, file)).birthtime).toLocaleString()}`
-                    }))
+                    { 
+                        name: '📊 Command Usage',
+                        value: formatLogEntries(commandLogs, 'usage')
+                    },
+                    { 
+                        name: '⚠️ Error Logs',
+                        value: formatLogEntries(errorLogs, 'error')
+                    }
                 )
                 .setFooter({ text: 'Vidi Bot Logs' })
                 .setTimestamp();
 
-            await interaction.editReply({
-                embeds: [embed],
+            // Create the file logs embed if there are log files
+            let fileLogsEmbed = null;
+            if (logFiles.length > 0) {
+                fileLogsEmbed = new EmbedBuilder()
+                    .setColor('#0099ff')
+                    .setTitle('Log Files')
+                    .setDescription('Recent log files:')
+                    .addFields(
+                        logFiles.map(file => ({
+                            name: file,
+                            value: `Created: ${new Date(fs.statSync(path.join(logsDir, file)).birthtime).toLocaleString()}`
+                        }))
+                    );
+            }
+
+            // Send the response with both embeds if available
+            await interaction.reply({
+                embeds: fileLogsEmbed ? [embed, fileLogsEmbed] : [embed],
                 ephemeral: true
             });
+
         } catch (error) {
             console.error('Error in logs command:', error);
-            await interaction.editReply({
+            await interaction.reply({
                 content: '❌ An error occurred while fetching logs.',
                 ephemeral: true
             });

@@ -1,8 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
-const MANIFEST_URL = 'vidi://torrentio.elfhosted.com/manifest.json';
-const CONFIGURE_URL = 'https://torrentio.elfhosted.com/configure';
+const MANIFEST_URL = 'vidi://torrentio.strem.fun/manifest.json';
+const CONFIGURE_URL = 'https://torrentio.strem.fun/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,17 +11,15 @@ module.exports = {
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('Torrentio Addon')
-            .setThumbnail('attachment://torrentio-modified.png')
-            .setDescription('Access a vast library of content through Torrentio\'s powerful indexing system.')
+            .setTitle('Torrentio')
+            .setDescription('A debrid link addon that provides access to a wide range of torrent files.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Large content library\n' +
-                    '• Multiple quality options\n' +
-                    '• Fast indexing\n' +
-                    '• Regular updates'
+                    '• Access to a large library of torrent files\n' +
+                    '• Support for multiple debrid services\n' +
+                    '• Easy to use interface'
                 },
-                { name: 'Installation', value: 'Click Configure to set up your preferences, then Install to add the addon to your Vidi player.' }
+                { name: 'Installation', value: 'Click Configure to set up this addon with your debrid service.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -39,12 +36,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'torrentio-modified.png');
-
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

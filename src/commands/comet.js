@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
 const MANIFEST_URL = 'vidi://comet.elfhosted.com/manifest.json';
 const CONFIGURE_URL = 'https://comet.elfhosted.com/configure';
@@ -12,17 +11,16 @@ module.exports = {
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('Comet Addon')
-            .setThumbnail('attachment://comet-modified.png')
-            .setDescription('Comet is a powerful metadata addon that enhances your media library with rich information.')
+            .setTitle('Comet')
+            .setDescription('A powerful addon that provides access to multiple streaming sources.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Enhanced metadata\n' +
-                    '• Automatic media recognition\n' +
-                    '• Rich media information\n' +
-                    '• Fast and efficient'
+                    '• Multiple streaming sources\n' +
+                    '• High-quality content\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 },
-                { name: 'Installation', value: 'Click Install to add the Comet addon to your Vidi player. No configuration required!' }
+                { name: 'Installation', value: 'Click Configure to set up this addon with your preferences.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -32,15 +30,16 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId('comet_install')
                     .setLabel('Install Comet')
-                    .setStyle(ButtonStyle.Primary)
+                    .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                    .setURL(CONFIGURE_URL)
+                    .setLabel('Configure')
+                    .setStyle(ButtonStyle.Link)
             );
-
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'comet-modified.png');
 
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

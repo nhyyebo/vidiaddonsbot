@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
 const MANIFEST_URL = 'vidi://cyberflix.elfhosted.com/manifest.json';
 const CONFIGURE_URL = 'https://cyberflix.elfhosted.com/configure';
@@ -12,17 +11,16 @@ module.exports = {
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('CyberFlix Addon')
-            .setThumbnail('attachment://cyberflix-modified.png')
-            .setDescription('CyberFlix is a powerful streaming addon that provides access to a vast library of content.')
+            .setTitle('CyberFlix')
+            .setDescription('A powerful addon that provides access to multiple streaming sources.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Large content library\n' +
-                    '• Multiple quality options\n' +
-                    '• Fast streaming\n' +
-                    '• Regular updates'
+                    '• Multiple streaming sources\n' +
+                    '• High-quality content\n' +
+                    '• Regular updates\n' +
+                    '• Easy configuration'
                 },
-                { name: 'Installation', value: 'Click Configure to set up your account, then Install to add the addon to your Vidi player.' }
+                { name: 'Installation', value: 'Click Configure to set up this addon with your preferences.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -39,12 +37,9 @@ module.exports = {
                     .setStyle(ButtonStyle.Link)
             );
 
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'cyberflix-modified.png');
-
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

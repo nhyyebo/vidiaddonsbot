@@ -1,8 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
-const MANIFEST_URL = 'vidi://tmdb.elfhosted.com/manifest.json';
-const CONFIGURE_URL = 'https://tmdb.elfhosted.com/configure';
+const MANIFEST_URL = 'vidi://94c8cb9f702d-tmdb-addon.baby-beamup.club/manifest.json';
+const CONFIGURE_URL = 'https://94c8cb9f702d-tmdb-addon.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,17 +11,16 @@ module.exports = {
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('TMDB Addon')
-            .setThumbnail('attachment://tmdb-modified.png')
-            .setDescription('The Movie Database (TMDB) addon provides rich metadata and information for movies and TV shows.')
+            .setTitle('The Movie Database Addon')
+            .setDescription('A metadata addon that provides access to The Movie Database\'s vast library of movie and TV show information.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Detailed movie and TV show information\n' +
-                    '• High-quality posters and artwork\n' +
-                    '• Cast and crew details\n' +
+                    '• Access to The Movie Database\'s vast library\n' +
+                    '• Detailed information about titles\n' +
+                    '• Cast and crew information\n' +
                     '• Ratings and reviews'
                 },
-                { name: 'Installation', value: 'Click Configure to set up your TMDB API key, then Install to add the addon to your Vidi player.' }
+                { name: 'Installation', value: 'Click Configure to set up this addon with your API key.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -36,19 +34,12 @@ module.exports = {
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL('https://www.themoviedb.org/signup')
-                    .setLabel('Get TMDB Account')
                     .setStyle(ButtonStyle.Link)
             );
 
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'tmdb-modified.png');
-
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

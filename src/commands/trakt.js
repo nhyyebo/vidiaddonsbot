@@ -1,28 +1,26 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
-const MANIFEST_URL = 'vidi://trakt.elfhosted.com/manifest.json';
-const CONFIGURE_URL = 'https://trakt.elfhosted.com/configure';
+const MANIFEST_URL = 'vidi://2ecbbd610840-trakt.baby-beamup.club/manifest.json';
+const CONFIGURE_URL = 'https://2ecbbd610840-trakt.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('trakt')
-        .setDescription('Install and configure Trakt addon'),
+        .setDescription('Install and configure Trakt.tv addon'),
 
     async execute(interaction) {
         const embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle('Trakt Addon')
-            .setThumbnail('attachment://trakt-modified.png')
-            .setDescription('Track your watched movies and TV shows with Trakt integration.')
+            .setTitle('Trakt.tv')
+            .setDescription('A catalog addon that provides access to Trakt.tv\'s vast library of movie and TV show information.')
             .addFields(
                 { name: 'Features', value: 
-                    '• Sync watched history\n' +
-                    '• Track your progress\n' +
-                    '• Access your watchlist\n' +
-                    '• Discover new content'
+                    '• Access to Trakt\'s vast library\n' +
+                    '• Movie and TV show lists\n' +
+                    '• Personal catalogs\n' +
+                    '• Easy to use interface'
                 },
-                { name: 'Installation', value: 'Click Configure to set up your Trakt account, then Install to add the addon to your Vidi player.' }
+                { name: 'Installation', value: 'Click Configure to set up this addon with your Trakt.tv account.' }
             )
             .setFooter({ text: 'Vidi Addons' })
             .setTimestamp();
@@ -36,19 +34,12 @@ module.exports = {
                 new ButtonBuilder()
                     .setURL(CONFIGURE_URL)
                     .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL('https://trakt.tv/auth/join')
-                    .setLabel('Get Trakt Account')
                     .setStyle(ButtonStyle.Link)
             );
 
-        const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'trakt-modified.png');
-
         await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            files: [iconPath]
+            components: [row]
         });
     },
 

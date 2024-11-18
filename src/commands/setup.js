@@ -1,6 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
+const MANIFEST_URL = 'vidi://torrentio.elfhosted.com/manifest.json';
+const CONFIGURE_URL = 'https://torrentio.elfhosted.com/configure';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup')
@@ -12,9 +15,8 @@ module.exports = {
             .setTitle('Torrentio Quick Setup')
             .setDescription('Install Torrentio with pre-configured settings for optimal performance.')
             .addFields(
-                { name: 'Included Providers', value: 'YTS, EZTV, RARBG, 1337x, ThePirateBay, KickassTorrents, TorrentGalaxy, MagnetDL, HorribleSubs, NyaaSi, TokyoTosho, AniDex, RuTracker' },
-                { name: 'Quality Filters', value: 'BRRip/Remux, HDR, Dolby Vision, 3D' },
-                { name: 'Other Settings', value: '• 5 links per stream\n• No download links\n• Real-Debrid integration' }
+                { name: 'Features', value: '• Multiple providers support\n• Quality filters\n• Debrid integration\n• Optimized settings' },
+                { name: 'Installation', value: 'Click Install to add Torrentio to your Vidi player, or Configure to customize settings.' }
             )
             .setFooter({ text: 'Vidi Addons' });
 
@@ -25,30 +27,23 @@ module.exports = {
                     .setLabel('Install Torrentio')
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
-                    .setURL('https://real-debrid.com')
-                    .setLabel('Get Real-Debrid')
+                    .setURL(CONFIGURE_URL)
+                    .setLabel('Configure')
                     .setStyle(ButtonStyle.Link)
             );
 
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [embed],
-            components: [row],
-            ephemeral: true
+            components: [row]
         });
     },
 
     async handleButton(interaction) {
         if (interaction.customId === 'setup_install') {
-            const installUrl = 'vidi://torrentio.strem.fun/providers=yts,eztv,rarbg,1337x,thepiratebay,kickasstorrents,torrentgalaxy,magnetdl,horriblesubs,nyaasi,tokyotosho,anidex,rutracker%7Cqualityfilter=brremux,hdrall,dolbyvision,dolbyvisionwithhdr,threed,other,scr,cam,unknown%7Climit=5%7Cdebridoptions=nodownloadlinks%7Crealdebrid=API Token/manifest.json';
-            
-            const installEmbed = new EmbedBuilder()
-                .setColor('#00ff00')
-                .setTitle('Install Torrentio')
-                .setDescription(`Click [here](${installUrl}) to install Torrentio with optimal settings.\n\nMake sure you have:\n1. Vidi installed on your device\n2. A Real-Debrid subscription\n3. Your Real-Debrid API token ready`);
-
-            await interaction.reply({
-                embeds: [installEmbed],
-                ephemeral: true
+            await interaction.editReply({
+                content: `To install Torrentio, click this link:\n${MANIFEST_URL}`,
+                components: [],
+                embeds: []
             });
         }
     }

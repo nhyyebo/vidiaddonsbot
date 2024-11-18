@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('path');
 
-const MANIFEST_URL = 'vidi://cinemeta.elfhosted.com/manifest.json';
+const MANIFEST_URL = 'vidi://v3-cinemeta.strem.io/manifest.json';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cinemeta')
-        .setDescription('Install Cinemeta metadata addon'),
+        .setDescription('Install Cinemeta addon'),
     
     async execute(interaction) {
         try {
@@ -14,17 +14,17 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('Cinemeta Addon')
-                .setThumbnail('attachment://cinemeta-modified.png')
-                .setDescription('Cinemeta provides comprehensive metadata for movies and TV shows.')
+                .setTitle('Cinemeta')
+                .setDescription('The official addon for movie, series, and anime metadata. Provides comprehensive information about titles including cast, crew, ratings, and more.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Movie and TV show metadata\n' +
-                        '• High-quality posters\n' +
-                        '• Cast and crew information\n' +
-                        '• Episode details'
+                        '• Detailed movie and TV show information\n' +
+                        '• Cast and crew details\n' +
+                        '• IMDb ratings integration\n' +
+                        '• Episode descriptions\n' +
+                        '• Release dates and runtime information'
                     },
-                    { name: 'Installation', value: 'Click Install to add the Cinemeta addon to your Vidi player. No configuration required!' }
+                    { name: 'Installation', value: 'Click Install to add this addon to your Vidi player. No configuration required.' }
                 )
                 .setFooter({ text: 'Vidi Addons' })
                 .setTimestamp();
@@ -37,12 +37,9 @@ module.exports = {
                         .setStyle(ButtonStyle.Primary)
                 );
 
-            const iconPath = path.join(__dirname, '..', '..', 'addonicons', 'cinemeta-modified.png');
-
             await interaction.editReply({
                 embeds: [embed],
-                components: [row],
-                files: [iconPath]
+                components: [row]
             });
         } catch (error) {
             logger.error('Error in Cinemeta command:', error);
