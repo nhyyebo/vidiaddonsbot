@@ -14,11 +14,11 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('IMDb')
-                .setDescription('Access IMDb\'s extensive movie and TV show catalog.')
+                .setDescription('Access IMDb ratings and metadata.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Extensive movie and TV catalog\n' +
-                        '• IMDb ratings and reviews\n' +
+                        '• IMDb ratings integration\n' +
+                        '• Movie and TV show information\n' +
                         '• Regular updates\n' +
                         '• Easy configuration'
                     }
@@ -38,17 +38,21 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in IMDb command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while processing your request. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

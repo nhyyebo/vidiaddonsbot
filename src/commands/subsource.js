@@ -14,11 +14,11 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('SubSource')
-                .setDescription('Access subtitles from various sources.')
+                .setDescription('Access subtitles from multiple sources.')
                 .addFields(
                     { name: 'Features', value: 
                         '• Multiple subtitle sources\n' +
-                        '• Multiple languages\n' +
+                        '• Various languages\n' +
                         '• Regular updates\n' +
                         '• Easy configuration'
                     }
@@ -38,17 +38,21 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
-            console.error('Error in subsource command:', error);
-            await interaction.reply({
-                content: '❌ An error occurred while fetching addon information. Please try again later.',
-                ephemeral: true
-            });
+            console.error('Error in SubSource command:', error);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

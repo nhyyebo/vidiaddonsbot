@@ -9,39 +9,50 @@ module.exports = {
         .setDescription('Install and configure CyberFlix addon'),
 
     async execute(interaction) {
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('CyberFlix')
-            .setDescription('A powerful addon that provides access to multiple streaming sources.')
-            .addFields(
-                { name: 'Features', value: 
-                    '• Multiple streaming sources\n' +
-                    '• High-quality content\n' +
-                    '• Regular updates\n' +
-                    '• Easy configuration'
-                },
-                { name: 'Installation', value: 'Click Configure to set up this addon with your preferences.' }
-            )
-            .setFooter({ text: 'Vidi Addons' })
-            .setTimestamp();
+        try {
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('CyberFlix')
+                .setDescription('Access streaming content from CyberFlix.')
+                .addFields(
+                    { name: 'Features', value: 
+                        '• Large content library\n' +
+                        '• High-quality streams\n' +
+                        '• Regular updates\n' +
+                        '• Easy configuration'
+                    }
+                )
+                .setFooter({ text: 'Vidi Addons' })
+                .setTimestamp();
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setURL(MANIFEST_URL)
-                    .setLabel('Install CyberFlix')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL(CONFIGURE_URL)
-                    .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link)
-            );
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setURL(MANIFEST_URL)
+                        .setLabel('Install CyberFlix')
+                        .setStyle(ButtonStyle.Link),
+                    new ButtonBuilder()
+                        .setURL(CONFIGURE_URL)
+                        .setLabel('Configure')
+                        .setStyle(ButtonStyle.Link)
+                );
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
+        } catch (error) {
+            console.error('Error in CyberFlix command:', error);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
+        }
     },
 
     async handleButton(interaction) {

@@ -1,32 +1,21 @@
-const { Client, Collection, GatewayIntentBits, EmbedBuilder } = require('discord.js');
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { handleCommand } = require('./utils/commandHandler');
 require('dotenv').config();
-
-// Initialize Express app
-const app = express();
-
-// Basic health check endpoint
-app.get('/', (req, res) => {
-    res.send('Bot is running!');
-});
-
-// Start Express server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
 
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers
     ]
 });
 
 client.commands = new Collection();
+
+// Load commands
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -38,90 +27,49 @@ for (const file of commandFiles) {
     }
 }
 
-// Function to send command usage notification to owner
-async function notifyOwner(interaction, status = 'success', error = null) {
-    try {
-        const ownerId = process.env.OWNER_ID;
-        if (!ownerId) {
-            console.error('Owner ID not configured in environment variables');
-            return;
-        }
-
-        const embed = new EmbedBuilder()
-            .setColor(status === 'success' ? '#00ff00' : '#ff0000')
-            .setTitle(`Command ${status === 'success' ? 'Used' : 'Error'}`)
-            .addFields(
-                { name: 'Command', value: `/${interaction.commandName}` },
-                { name: 'User', value: `${interaction.user.tag} (${interaction.user.id})` },
-                { name: 'Server', value: interaction.guild.name },
-                { name: 'Channel', value: interaction.channel.name }
-            )
-            .setTimestamp();
-
-        // Add command options if any
-        const options = [];
-        interaction.options.data.forEach(option => {
-            options.push(`${option.name}: ${option.value}`);
-        });
-        if (options.length > 0) {
-            embed.addFields({ name: 'Options', value: options.join('\n') });
-        }
-
-        // Add error information if present
-        if (error) {
-            embed.addFields({ name: 'Error', value: `\`\`\`${error.message}\`\`\`` });
-        }
-
-        const owner = await client.users.fetch(ownerId);
-        await owner.send({ embeds: [embed] });
-    } catch (e) {
-        console.error('Failed to send command usage notification:', e);
-    }
-}
-
+// Ready event
 client.once('ready', () => {
-    console.log('Bot is ready!');
+    console.log(`Logged in as ${client.user.tag}!`);
 });
 
+// Handle interactions
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
-    try {
-        // Only defer if not already deferred or replied
-        if (!interaction.deferred && !interaction.replied) {
-            await interaction.deferReply({ ephemeral: true });
-        }
-        
-        // Execute the command
-        await command.execute(interaction);
-        
-        // Send notification after successful execution
-        await notifyOwner(interaction, 'success');
-    } catch (error) {
-        console.error(`Error executing command ${interaction.commandName}:`, error);
-        
-        // Send error notification
-        await notifyOwner(interaction, 'error', error);
-        
-        // Handle error response
-        try {
-            const errorMessage = {
-                content: 'An error occurred while executing this command.',
-                ephemeral: true
-            };
-            
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply(errorMessage);
-            } else if (interaction.deferred) {
-                await interaction.editReply(errorMessage);
-            }
-        } catch (err) {
-            console.error('Error sending error message:', err);
-        }
-    }
+    await handleCommand(command, interaction);
+});
+
+// Global error handlers
+client.on('error', error => {
+    console.error('Discord client error:', error);
+});
+
+client.on('warn', warning => {
+    console.warn('Discord client warning:', warning);
+});
+
+process.on('unhandledRejection', error => {
+    console.error('Unhandled promise rejection:', error);
+});
+
+process.on('uncaughtException', error => {
+    console.error('Uncaught exception:', error);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+    console.log('Received SIGINT. Performing graceful shutdown...');
+    client.destroy();
+    process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+    console.log('Received SIGTERM. Performing graceful shutdown...');
+    client.destroy();
+    process.exit(0);
 });
 
 client.login(process.env.DISCORD_TOKEN);

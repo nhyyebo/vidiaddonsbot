@@ -37,16 +37,20 @@ module.exports = {
                 .setFooter({ text: 'Vidi Addons' })
                 .setTimestamp();
 
-            await interaction.reply({
-                embeds: [embed],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in help command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while processing your request. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

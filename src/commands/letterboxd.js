@@ -32,17 +32,21 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in Letterboxd command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while processing your request. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

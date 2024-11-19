@@ -9,36 +9,49 @@ module.exports = {
         .setDescription('Install and configure Torrentio addon'),
 
     async execute(interaction) {
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('Torrentio')
-            .setDescription('A debrid link addon that provides access to a wide range of torrent files.')
-            .addFields(
-                { name: 'Features', value: 
-                    '• Access to a large library of torrent files\n' +
-                    '• Support for multiple debrid services\n' +
-                    '• Easy to use interface'
-                }
-            )
-            .setFooter({ text: 'Vidi Addons' })
-            .setTimestamp();
+        try {
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('Torrentio')
+                .setDescription('Access content from various torrent sources.')
+                .addFields(
+                    { name: 'Features', value: 
+                        '• Multiple torrent sources\n' +
+                        '• High-quality streams\n' +
+                        '• Regular updates\n' +
+                        '• Easy configuration'
+                    }
+                )
+                .setFooter({ text: 'Vidi Addons' })
+                .setTimestamp();
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setURL(MANIFEST_URL)
-                    .setLabel('Install Torrentio')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL(CONFIGURE_URL)
-                    .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link)
-            );
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setURL(MANIFEST_URL)
+                        .setLabel('Install Torrentio')
+                        .setStyle(ButtonStyle.Link),
+                    new ButtonBuilder()
+                        .setURL(CONFIGURE_URL)
+                        .setLabel('Configure')
+                        .setStyle(ButtonStyle.Link)
+                );
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
+        } catch (error) {
+            console.error('Error in Torrentio command:', error);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
+        }
     }
 };

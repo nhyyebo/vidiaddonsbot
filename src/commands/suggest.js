@@ -1,6 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 require('dotenv').config();
 
+const SUGGESTIONS_CHANNEL_ID = process.env.SUGGESTIONS_CHANNEL_ID;
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('suggest')
@@ -13,88 +15,52 @@ module.exports = {
     async execute(interaction) {
         try {
             const suggestion = interaction.options.getString('suggestion');
-            const ownerId = process.env.OWNER_ID;
             
-            if (!ownerId) {
-                throw new Error('Owner ID not configured in environment variables');
-            }
-
-            // Create an embed for the suggestion
-            const suggestionEmbed = new EmbedBuilder()
+            // Create a suggestion embed
+            const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('New Suggestion')
                 .setDescription(suggestion)
-                .addFields(
-                    { name: 'Submitted by', value: `${interaction.user.tag} (${interaction.user.id})` },
-                    { name: 'Server', value: interaction.guild.name },
-                    { name: 'Channel', value: interaction.channel.name }
-                )
-                .setFooter({ text: 'Vidi Addons Suggestions' })
+                .setFooter({ 
+                    text: `Suggested by ${interaction.user.tag}`,
+                    iconURL: interaction.user.displayAvatarURL()
+                })
                 .setTimestamp();
 
-            try {
-                // Try to send DM to owner
-                const owner = await interaction.client.users.fetch(ownerId);
-                await owner.send({ embeds: [suggestionEmbed] });
-            } catch (dmError) {
-                console.error('Failed to send DM to owner:', dmError);
-                // Send error notification to owner about DM failure
-                const errorEmbed = new EmbedBuilder()
-                    .setColor('#ff0000')
-                    .setTitle('DM Delivery Failed')
-                    .setDescription('Failed to deliver suggestion via DM. Please check your DM settings.')
-                    .setTimestamp();
-                
-                try {
-                    const owner = await interaction.client.users.fetch(ownerId);
-                    await owner.send({ embeds: [errorEmbed] });
-                } catch (e) {
-                    console.error('Failed to send error notification:', e);
+            // Get the suggestions channel
+            const suggestionsChannel = interaction.client.channels.cache.get(SUGGESTIONS_CHANNEL_ID);
+            
+            if (!suggestionsChannel) {
+                if (!interaction.replied && !interaction.deferred) {
+                    await interaction.reply({
+                        content: 'Could not find the suggestions channel. Please contact an administrator.',
+                        ephemeral: true
+                    });
                 }
+                return;
             }
 
-            // Also try to send to suggestions channel if it exists
-            const suggestionsChannel = interaction.guild.channels.cache.find(
-                channel => channel.name === 'suggestions'
-            );
+            // Send the suggestion to the channel
+            const message = await suggestionsChannel.send({ embeds: [embed] });
+            
+            // Add reaction buttons
+            await message.react('👍');
+            await message.react('👎');
 
-            if (suggestionsChannel) {
-                await suggestionsChannel.send({ embeds: [suggestionEmbed] });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content: 'Your suggestion has been submitted! Thank you for your feedback.',
+                    ephemeral: true
+                });
             }
-
-            // Reply to user
-            await interaction.reply({
-                content: 'Thank you for your suggestion! It has been submitted for review.',
-                ephemeral: true
-            });
-
         } catch (error) {
             console.error('Error in suggest command:', error);
-            
-            // Send error notification to owner
-            try {
-                const errorEmbed = new EmbedBuilder()
-                    .setColor('#ff0000')
-                    .setTitle('Command Error')
-                    .setDescription(`Error in suggest command:\n\`\`\`${error.message}\`\`\``)
-                    .addFields(
-                        { name: 'User', value: `${interaction.user.tag} (${interaction.user.id})` },
-                        { name: 'Server', value: interaction.guild.name },
-                        { name: 'Channel', value: interaction.channel.name }
-                    )
-                    .setTimestamp();
-
-                const owner = await interaction.client.users.fetch(process.env.OWNER_ID);
-                await owner.send({ embeds: [errorEmbed] });
-            } catch (e) {
-                console.error('Failed to send error notification:', e);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while submitting your suggestion. Please try again later.',
+                    ephemeral: true 
+                });
             }
-
-            // Reply to user
-            await interaction.reply({ 
-                content: 'An error occurred while processing your suggestion. The bot owner has been notified.',
-                ephemeral: true 
-            });
         }
     }
 };

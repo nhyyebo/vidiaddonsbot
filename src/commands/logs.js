@@ -77,10 +77,12 @@ module.exports = {
         try {
             // Check for required role
             if (!await hasRequiredRole(interaction)) {
-                await interaction.reply({
-                    content: 'You do not have permission to use this command.',
-                    ephemeral: true
-                });
+                if (!interaction.replied && !interaction.deferred) {
+                    await interaction.reply({
+                        content: 'You do not have permission to use this command.',
+                        ephemeral: true
+                    });
+                }
                 return;
             }
 
@@ -108,16 +110,20 @@ module.exports = {
                 .setFooter({ text: 'Vidi Bot Logs' })
                 .setTimestamp();
 
-            await interaction.reply({
-                embeds: [embed],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in logs command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while fetching logs. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while fetching logs. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     },
 

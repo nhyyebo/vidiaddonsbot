@@ -13,11 +13,11 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Jackett')
-                .setDescription('Access content from various torrent sources.')
+                .setDescription('Access custom torrent indexers.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Multiple torrent sources\n' +
-                        '• Advanced search capabilities\n' +
+                        '• Custom torrent indexers\n' +
+                        '• Multiple sources\n' +
                         '• Regular updates\n' +
                         '• Easy configuration'
                     }
@@ -37,17 +37,21 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in Jackett command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while processing your request. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

@@ -10,37 +10,49 @@ module.exports = {
         .setDescription('Install and configure EasyNews addon'),
 
     async execute(interaction) {
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('EasyNews')
-            .setDescription('Access content from EasyNews Usenet service.')
-            .addFields(
-                { name: 'Features', value: 
-                    '• Extensive media library\n' +
-                    '• High-speed downloads\n' +
-                    '• Regular updates\n' +
-                    '• Easy configuration'
-                }
-            )
-            .setFooter({ text: 'Vidi Addons' })
-            .setTimestamp();
+        try {
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('EasyNews')
+                .setDescription('Access content from EasyNews Usenet service.')
+                .addFields(
+                    { name: 'Features', value: 
+                        '• Extensive media library\n' +
+                        '• High-speed downloads\n' +
+                        '• Regular updates\n' +
+                        '• Easy configuration'
+                    }
+                )
+                .setFooter({ text: 'Vidi Addons' })
+                .setTimestamp();
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setURL(MANIFEST_URL)
-                    .setLabel('Install EasyNews')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL(CONFIGURE_URL)
-                    .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link)
-            );
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setURL(MANIFEST_URL)
+                        .setLabel('Install EasyNews')
+                        .setStyle(ButtonStyle.Link),
+                    new ButtonBuilder()
+                        .setURL(CONFIGURE_URL)
+                        .setLabel('Configure')
+                        .setStyle(ButtonStyle.Link)
+                );
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
+        } catch (error) {
+            console.error('Error in EasyNews command:', error);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
+        }
     }
 };

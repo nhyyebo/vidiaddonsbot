@@ -13,14 +13,13 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Cinemeta')
-                .setDescription('The official addon for movie, series, and anime metadata.')
+                .setDescription('Access movie and TV show metadata.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Detailed movie and TV show information\n' +
-                        '• Cast and crew details\n' +
-                        '• IMDb ratings integration\n' +
-                        '• Episode descriptions\n' +
-                        '• Release dates and runtime information'
+                        '• Comprehensive metadata\n' +
+                        '• Movie and TV show information\n' +
+                        '• Regular updates\n' +
+                        '• Easy integration'
                     }
                 )
                 .setFooter({ text: 'Vidi Addons' })
@@ -34,17 +33,21 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in Cinemeta command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while processing your request. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

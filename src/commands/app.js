@@ -7,36 +7,40 @@ module.exports = {
         .setDescription('Get Vidi app download link'),
 
     async execute(interaction) {
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('Download Vidi')
-            .setDescription('Get the Vidi app for your platform:')
-            .addFields(
-                { name: 'Platforms', value: 
-                    '• ATV\n' +
-                    '• iOS'
-                }
-            )
-            .setFooter({ text: 'Vidi App' })
-            .setTimestamp();
+        try {
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('Vidi App')
+                .setDescription('Get started with Vidi on your device.')
+                .addFields(
+                    { name: 'Download', value: 'Click the button below to download Vidi.' }
+                )
+                .setFooter({ text: 'Vidi App' })
+                .setTimestamp();
 
-        const appUrl = process.env.APP_STORE_URL;
-        if (!appUrl) {
-            throw new Error('App Store URL not configured in environment variables');
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setURL(process.env.APP_URL || 'https://vidiapp.page.link/download')
+                        .setLabel('Download Vidi')
+                        .setStyle(ButtonStyle.Link)
+                );
+
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
+        } catch (error) {
+            console.error('Error in app command:', error);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
-
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setURL(appUrl)
-                    .setLabel('Download Vidi')
-                    .setStyle(ButtonStyle.Link)
-            );
-
-        await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        });
     }
 };

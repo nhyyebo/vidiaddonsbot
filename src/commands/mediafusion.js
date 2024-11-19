@@ -13,11 +13,11 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('MediaFusion')
-                .setDescription('Access content from various streaming sources.')
+                .setDescription('Access content from multiple streaming sources.')
                 .addFields(
                     { name: 'Features', value: 
                         '• Multiple streaming sources\n' +
-                        '• High-quality streams\n' +
+                        '• High-quality content\n' +
                         '• Regular updates\n' +
                         '• Easy configuration'
                     }
@@ -37,17 +37,21 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            await interaction.reply({
-                embeds: [embed],
-                components: [row],
-                ephemeral: true
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in MediaFusion command:', error);
-            await interaction.reply({ 
-                content: 'An error occurred while processing your request. Please try again later.',
-                ephemeral: true 
-            });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
         }
     }
 };

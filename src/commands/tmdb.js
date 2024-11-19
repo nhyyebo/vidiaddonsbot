@@ -9,36 +9,49 @@ module.exports = {
         .setDescription('Install and configure TMDB addon'),
 
     async execute(interaction) {
-        const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('The Movie Database Addon')
-            .setDescription('A metadata addon that provides access to The Movie Database\'s vast library of movie and TV show information.')
-            .addFields(
-                { name: 'Features', value: 
-                    '• Access to The Movie Database\'s vast library of movie and TV show information\n' +
-                    '• Detailed information about titles, including cast, crew, and ratings\n' +
-                    '• Easy to use interface'
-                }
-            )
-            .setFooter({ text: 'Vidi Addons' })
-            .setTimestamp();
+        try {
+            const embed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('TMDB')
+                .setDescription('Access content from The Movie Database.')
+                .addFields(
+                    { name: 'Features', value: 
+                        '• Extensive movie & TV database\n' +
+                        '• High-quality metadata\n' +
+                        '• Regular updates\n' +
+                        '• Easy configuration'
+                    }
+                )
+                .setFooter({ text: 'Vidi Addons' })
+                .setTimestamp();
 
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setURL(MANIFEST_URL)
-                    .setLabel('Install TMDB')
-                    .setStyle(ButtonStyle.Link),
-                new ButtonBuilder()
-                    .setURL(CONFIGURE_URL)
-                    .setLabel('Configure')
-                    .setStyle(ButtonStyle.Link)
-            );
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setURL(MANIFEST_URL)
+                        .setLabel('Install TMDB')
+                        .setStyle(ButtonStyle.Link),
+                    new ButtonBuilder()
+                        .setURL(CONFIGURE_URL)
+                        .setLabel('Configure')
+                        .setStyle(ButtonStyle.Link)
+                );
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true
-        });
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    embeds: [embed],
+                    components: [row],
+                    ephemeral: true
+                });
+            }
+        } catch (error) {
+            console.error('Error in TMDB command:', error);
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({ 
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true 
+                });
+            }
+        }
     }
 };
