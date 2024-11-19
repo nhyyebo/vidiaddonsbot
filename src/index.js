@@ -90,28 +90,36 @@ client.on('interactionCreate', async interaction => {
     if (!command) return;
 
     try {
-        await interaction.deferReply({ ephemeral: true });
-        // Send notification before executing command
-        await notifyOwner(interaction, 'success');
+        // Only defer if not already deferred or replied
+        if (!interaction.deferred && !interaction.replied) {
+            await interaction.deferReply({ ephemeral: true });
+        }
         
         // Execute the command
         await command.execute(interaction);
+        
+        // Send notification after successful execution
+        await notifyOwner(interaction, 'success');
     } catch (error) {
         console.error(`Error executing command ${interaction.commandName}:`, error);
         
         // Send error notification
         await notifyOwner(interaction, 'error', error);
         
-        // Only try to reply if the interaction hasn't been replied to yet
-        if (!interaction.replied && !interaction.deferred) {
-            try {
-                await interaction.reply({
-                    content: 'An error occurred while executing this command.',
-                    ephemeral: true
-                });
-            } catch (err) {
-                console.error('Error sending error message:', err);
+        // Handle error response
+        try {
+            const errorMessage = {
+                content: 'An error occurred while executing this command.',
+                ephemeral: true
+            };
+            
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply(errorMessage);
+            } else if (interaction.deferred) {
+                await interaction.editReply(errorMessage);
             }
+        } catch (err) {
+            console.error('Error sending error message:', err);
         }
     }
 });
