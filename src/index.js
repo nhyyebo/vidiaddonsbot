@@ -1,8 +1,23 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const express = require('express');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { handleCommand } = require('./utils/commandHandler');
 require('dotenv').config();
+
+// Initialize Express app for Render
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Basic health check endpoint
+app.get('/', (req, res) => {
+    res.send('Bot is running!');
+});
+
+// Start Express server
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 const client = new Client({
     intents: [

@@ -5,6 +5,7 @@ const cooldowns = new Map();
 
 // Error messages mapped to user-friendly responses
 const errorMessages = {
+    'Unknown interaction': 'The command took too long to process. Please try again.',
     'Missing Permissions': 'I don\'t have the required permissions to perform this action.',
     'Unknown Message': 'The message could not be found. It may have been deleted.',
     'Unknown Channel': 'The channel could not be found.',
@@ -27,7 +28,7 @@ function getUserFriendlyError(error) {
 // Check if user is rate limited
 function isRateLimited(userId, commandName) {
     const now = Date.now();
-    const cooldownAmount = 3000; // 3 seconds cooldown
+    const cooldownAmount = 1000; // 1 second cooldown
 
     if (!cooldowns.has(commandName)) {
         cooldowns.set(commandName, new Map());
@@ -43,21 +44,33 @@ function isRateLimited(userId, commandName) {
     }
 
     timestamps.set(userId, now);
+    
+    // Clear old entries every minute to prevent memory leaks
+    if (timestamps.size > 1000) {
+        const oneMinuteAgo = now - 60000;
+        timestamps.forEach((timestamp, key) => {
+            if (timestamp < oneMinuteAgo) timestamps.delete(key);
+        });
+    }
+    
     return false;
 }
 
 // Main command handler wrapper
 async function handleCommand(command, interaction) {
     try {
+        // Immediately defer the reply to prevent timeout
+        if (!interaction.deferred && !interaction.replied) {
+            await interaction.deferReply({ ephemeral: true });
+        }
+
         // Check rate limiting
         const timeLeft = isRateLimited(interaction.user.id, command.data.name);
         if (timeLeft) {
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    content: `Please wait ${timeLeft.toFixed(1)} more seconds before using this command again.`,
-                    ephemeral: true
-                });
-            }
+            await interaction.editReply({
+                content: `Please wait ${timeLeft.toFixed(1)} more seconds before using this command again.`,
+                ephemeral: true
+            });
             return;
         }
 
@@ -68,12 +81,10 @@ async function handleCommand(command, interaction) {
             const missingPermissions = requiredPermissions.filter(perm => !botMember.permissions.has(perm));
             
             if (missingPermissions.length > 0) {
-                if (!interaction.replied && !interaction.deferred) {
-                    await interaction.reply({
-                        content: `I need the following permissions to execute this command: ${missingPermissions.join(', ')}`,
-                        ephemeral: true
-                    });
-                }
+                await interaction.editReply({
+                    content: `I need the following permissions to execute this command: ${missingPermissions.join(', ')}`,
+                    ephemeral: true
+                });
                 return;
             }
         }
@@ -101,10 +112,10 @@ async function handleCommand(command, interaction) {
 
         try {
             // Handle the error response
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
-            } else if (interaction.deferred) {
+            if (interaction.deferred) {
                 await interaction.editReply({ embeds: [errorEmbed] });
+            } else if (!interaction.replied) {
+                await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
             } else {
                 await interaction.followUp({ embeds: [errorEmbed], ephemeral: true });
             }
