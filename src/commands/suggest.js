@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+require('dotenv').config();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -24,20 +25,23 @@ module.exports = {
                 .setFooter({ text: 'Vidi Suggestions' })
                 .setTimestamp();
 
-            // Send to suggestions channel if it exists
-            const suggestionsChannel = interaction.client.channels.cache.find(
-                channel => channel.name === 'suggestions'
-            );
+            // Send to owner via DM
+            const ownerId = process.env.OWNER_ID;
+            if (!ownerId) {
+                throw new Error('Owner ID not configured in environment variables');
+            }
 
-            if (suggestionsChannel) {
-                await suggestionsChannel.send({ embeds: [embed] });
+            try {
+                const owner = await interaction.client.users.fetch(ownerId);
+                await owner.send({ embeds: [embed] });
                 await interaction.reply({
                     content: 'Thank you for your suggestion! It has been sent to our team.',
                     ephemeral: true
                 });
-            } else {
+            } catch (dmError) {
+                console.error('Error sending DM:', dmError);
                 await interaction.reply({
-                    content: 'Thank you for your suggestion! Unfortunately, the suggestions channel is not available right now.',
+                    content: 'An error occurred while sending your suggestion. Please try again later.',
                     ephemeral: true
                 });
             }
