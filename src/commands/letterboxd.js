@@ -12,41 +12,37 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Letterboxd')
-                .setDescription('Access your Letterboxd watchlist and lists.')
+                .setDescription('Access your Letterboxd watchlist and reviews.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Import your Letterboxd watchlist\n' +
-                        '• Access your custom lists\n' +
-                        '• Sync with Letterboxd account\n' +
-                        '• Regular updates'
+                        '• Import your watchlist\n' +
+                        '• View your reviews\n' +
+                        '• Discover new movies\n' +
+                        '• Track your watched films'
                     }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Letterboxd Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install Letterboxd')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in Letterboxd command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

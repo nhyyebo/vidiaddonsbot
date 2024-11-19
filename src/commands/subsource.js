@@ -1,58 +1,48 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
 const MANIFEST_URL = 'https://vidibot.netlify.app/subsource';
-const CONFIGURE_URL = 'https://subsource.strem.bar/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('subsource')
-        .setDescription('Install and configure SubSource addon'),
+        .setDescription('Install Subsource addon'),
 
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('SubSource')
+                .setTitle('Subsource')
                 .setDescription('Access subtitles from multiple sources.')
                 .addFields(
                     { name: 'Features', value: 
                         '• Multiple subtitle sources\n' +
                         '• Various languages\n' +
-                        '• Regular updates\n' +
-                        '• Easy configuration'
+                        '• Fast search\n' +
+                        '• Easy integration'
                     }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Subsource Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install SubSource')
-                        .setStyle(ButtonStyle.Link),
-                    new ButtonBuilder()
-                        .setURL(CONFIGURE_URL)
-                        .setLabel('Configure')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
-            console.error('Error in SubSource command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            console.error('Error in Subsource command:', error);
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

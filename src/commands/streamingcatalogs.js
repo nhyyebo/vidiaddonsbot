@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 const MANIFEST_URL = 'https://vidibot.netlify.app/streamingcatalogs';
-const CONFIGURE_URL = 'https://7a82163c306e-stremio-netflix-catalog-addon.baby-beamup.club/configure';
+const CONFIGURE_URL = 'https://b89262c192b0-stremio-streamingcatalogs-addon.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,23 +13,19 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Streaming Catalogs')
-                .setDescription('Access content from various streaming catalogs.')
+                .setDescription('Access content from various streaming platforms.')
                 .addFields(
-                    { name: 'Features', value: 
-                        '• Multiple streaming sources\n' +
-                        '• Extensive content library\n' +
-                        '• Regular updates\n' +
-                        '• Easy configuration'
-                    }
+                    { name: 'Installation', value: 'Click Install to add Streaming Catalogs.' },
+                    { name: 'Configuration', value: 'After installation, use Configure to set up your preferences.' }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Streaming Catalogs Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install Streaming Catalogs')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
@@ -37,21 +33,17 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in Streaming Catalogs command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

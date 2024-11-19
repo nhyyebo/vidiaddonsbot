@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 const MANIFEST_URL = 'https://vidibot.netlify.app/torrentio';
-const CONFIGURE_URL = 'https://torrentio.strem.fun/configure';
+const CONFIGURE_URL = 'https://b89262c192b0-stremio-torrentio-addon.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,23 +13,19 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Torrentio')
-                .setDescription('Access content from various torrent sources.')
+                .setDescription('Access content from multiple torrent sources.')
                 .addFields(
-                    { name: 'Features', value: 
-                        '• Multiple torrent sources\n' +
-                        '• High-quality streams\n' +
-                        '• Regular updates\n' +
-                        '• Easy configuration'
-                    }
+                    { name: 'Installation', value: 'Click Install to add Torrentio.' },
+                    { name: 'Configuration', value: 'After installation, use Configure to set up your preferences.' }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Torrentio Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install Torrentio')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
@@ -37,21 +33,17 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in Torrentio command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

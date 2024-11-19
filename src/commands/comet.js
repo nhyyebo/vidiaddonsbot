@@ -15,21 +15,17 @@ module.exports = {
                 .setTitle('Comet')
                 .setDescription('Access content from various streaming sources.')
                 .addFields(
-                    { name: 'Features', value: 
-                        '• Multiple streaming sources\n' +
-                        '• High-quality streams\n' +
-                        '• Regular updates\n' +
-                        '• Easy configuration'
-                    }
+                    { name: 'Installation', value: 'Click the button below to install Comet.' },
+                    { name: 'Configuration', value: 'After installation, configure Comet with your preferences.' }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Comet Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install Comet')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
@@ -37,21 +33,17 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in Comet command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

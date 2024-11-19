@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
 const MANIFEST_URL = 'https://vidibot.netlify.app/cinemeta';
 
@@ -13,41 +12,37 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Cinemeta')
-                .setDescription('Access movie and TV show metadata.')
+                .setDescription('Access metadata for movies and TV shows.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Comprehensive metadata\n' +
-                        '• Movie and TV show information\n' +
-                        '• Regular updates\n' +
-                        '• Easy integration'
+                        '• Movie and TV show metadata\n' +
+                        '• Posters and artwork\n' +
+                        '• Cast information\n' +
+                        '• Release dates'
                     }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Cinemeta Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install Cinemeta')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
-            console.error('Error in Cinemeta command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            console.error('Error in cinemeta command:', error);
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

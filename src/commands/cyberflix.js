@@ -1,35 +1,31 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 const MANIFEST_URL = 'https://vidibot.netlify.app/cyberflix';
-const CONFIGURE_URL = 'https://cyberflix.elfhosted.com/configure';
+const CONFIGURE_URL = 'https://b89262c192b0-stremio-cyberflix-addon.baby-beamup.club/configure';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cyberflix')
-        .setDescription('Install and configure CyberFlix addon'),
+        .setDescription('Install and configure Cyberflix addon'),
 
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('CyberFlix')
-                .setDescription('Access streaming content from CyberFlix.')
+                .setTitle('Cyberflix')
+                .setDescription('Access content from Cyberflix sources.')
                 .addFields(
-                    { name: 'Features', value: 
-                        '• Large content library\n' +
-                        '• High-quality streams\n' +
-                        '• Regular updates\n' +
-                        '• Easy configuration'
-                    }
+                    { name: 'Installation', value: 'Click Install to add Cyberflix.' },
+                    { name: 'Configuration', value: 'After installation, use Configure to set up your preferences.' }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Cyberflix Addon' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install CyberFlix')
+                        .setLabel('Install')
                         .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
@@ -37,30 +33,16 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
-            console.error('Error in CyberFlix command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
-        }
-    },
-
-    async handleButton(interaction) {
-        if (interaction.customId === 'cyberflix_install') {
-            await interaction.editReply({
-                content: `To install CyberFlix, click this link:\n${MANIFEST_URL}`,
-                components: [],
-                embeds: []
+            console.error('Error in Cyberflix command:', error);
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
             });
         }
     }

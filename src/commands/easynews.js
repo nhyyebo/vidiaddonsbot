@@ -1,58 +1,48 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const path = require('path');
 
-const MANIFEST_URL = 'https://vidibot.netlify.app/easynews';
-const CONFIGURE_URL = 'https://b89262c192b0-stremio-easynews-addon.baby-beamup.club/configure';
+const EASYNEWS_URL = 'https://signup.easynews.com/';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('easynews')
-        .setDescription('Install and configure EasyNews addon'),
+        .setDescription('Get Easynews signup link'),
 
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
-                .setTitle('EasyNews')
-                .setDescription('Access content from EasyNews Usenet service.')
+                .setTitle('Easynews')
+                .setDescription('Access Usenet content with Easynews.')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Extensive media library\n' +
-                        '• High-speed downloads\n' +
-                        '• Regular updates\n' +
-                        '• Easy configuration'
+                        '• Browser-based access\n' +
+                        '• Fast downloads\n' +
+                        '• No additional software needed\n' +
+                        '• VPN included'
                     }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Easynews' })
                 .setTimestamp();
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setURL(MANIFEST_URL)
-                        .setLabel('Install EasyNews')
-                        .setStyle(ButtonStyle.Link),
-                    new ButtonBuilder()
-                        .setURL(CONFIGURE_URL)
-                        .setLabel('Configure')
+                        .setURL(EASYNEWS_URL)
+                        .setLabel('Sign Up')
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
-            console.error('Error in EasyNews command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            console.error('Error in easynews command:', error);
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

@@ -9,12 +9,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Basic health check endpoint
 app.get('/', (req, res) => {
     res.send('Bot is running!');
 });
 
-// Start Express server
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });
@@ -42,7 +40,6 @@ for (const file of commandFiles) {
     }
 }
 
-// Ready event
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -54,18 +51,14 @@ client.on('interactionCreate', async interaction => {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
-    await handleCommand(command, interaction);
+    try {
+        await handleCommand(command, interaction);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 });
 
-// Global error handlers
-client.on('error', error => {
-    console.error('Discord client error:', error);
-});
-
-client.on('warn', warning => {
-    console.warn('Discord client warning:', warning);
-});
-
+// Error handlers
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
 });

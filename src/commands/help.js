@@ -10,47 +10,46 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Vidi Bot Commands')
-                .setDescription('Here are all the available commands:')
+                .setDescription('Here are all available commands:')
                 .addFields(
-                    { name: 'Addon Commands', value: 
-                        '`/trakt` - Install and configure Trakt addon\n' +
-                        '`/torrentio` - Install and configure Torrentio addon\n' +
-                        '`/tmdb` - Install and configure TMDB addon\n' +
-                        '`/subsource` - Install and configure SubSource addon\n' +
-                        '`/streamingcatalogs` - Install and configure Streaming Catalogs addon\n' +
-                        '`/opensubtitles` - Install and configure OpenSubtitles addon\n' +
-                        '`/mediafusion` - Install and configure MediaFusion addon\n' +
-                        '`/letterboxd` - Install Letterboxd addon\n' +
-                        '`/jackett` - Install and configure Jackett addon\n' +
-                        '`/imdb` - Install and configure IMDb addon\n' +
-                        '`/easynews` - Install and configure EasyNews addon\n' +
-                        '`/cyberflix` - Install and configure Cyberflix addon\n' +
-                        '`/comet` - Install and configure Comet addon\n' +
-                        '`/cinemeta` - Install Cinemeta addon\n' +
-                        '`/animekitsu` - Install and configure Animekitsu addon'
+                    { name: 'App & Website', value: 
+                        '`/app` - Get Vidi app download link\n' +
+                        '`/website` - Get Vidi website link'
                     },
-                    { name: 'Other Commands', value: 
-                        '`/help` - Show this help message\n' +
-                        '`/setup` - Get started with Vidi'
+                    { name: 'Addons', value: 
+                        '`/comet` - Install Comet addon\n' +
+                        '`/easynews` - Get Easynews signup\n' +
+                        '`/torrentio` - Install Torrentio addon\n' +
+                        '`/jackett` - Install Jackett addon'
+                    },
+                    { name: 'Media Sources', value: 
+                        '`/tmdb` - Search TMDb\n' +
+                        '`/imdb` - Search IMDb\n' +
+                        '`/trakt` - Search Trakt\n' +
+                        '`/letterboxd` - Search Letterboxd'
+                    },
+                    { name: 'Subtitles', value: 
+                        '`/opensubtitles` - Search OpenSubtitles\n' +
+                        '`/subsource` - Install Subsource addon'
+                    },
+                    { name: 'Other', value: 
+                        '`/suggest` - Make a suggestion\n' +
+                        '`/dmhelp` - Get help via DM'
                     }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Vidi Bot Help' })
                 .setTimestamp();
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in help command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

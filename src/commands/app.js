@@ -11,7 +11,7 @@ module.exports = {
     async execute(interaction) {
         try {
             if (!APP_URL) {
-                throw new Error('App URL not configured in environment variables');
+                throw new Error('App URL not configured');
             }
 
             const embed = new EmbedBuilder()
@@ -37,21 +37,17 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in app command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

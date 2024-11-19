@@ -1,66 +1,52 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-require('dotenv').config();
-
-const SUGGESTIONS_CHANNEL_ID = process.env.SUGGESTIONS_CHANNEL_ID;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('suggest')
-        .setDescription('Submit a suggestion')
+        .setDescription('Make a suggestion for Vidi')
         .addStringOption(option =>
             option.setName('suggestion')
-                .setDescription('Your suggestion')
+                .setDescription('Your suggestion for Vidi')
                 .setRequired(true)),
 
     async execute(interaction) {
         try {
             const suggestion = interaction.options.getString('suggestion');
-            
-            // Create a suggestion embed
+            const user = interaction.user;
+
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('New Suggestion')
                 .setDescription(suggestion)
-                .setFooter({ 
-                    text: `Suggested by ${interaction.user.tag}`,
-                    iconURL: interaction.user.displayAvatarURL()
-                })
+                .addFields(
+                    { name: 'Suggested by', value: user.tag }
+                )
+                .setFooter({ text: 'Vidi Suggestions' })
                 .setTimestamp();
 
-            // Get the suggestions channel
-            const suggestionsChannel = interaction.client.channels.cache.get(SUGGESTIONS_CHANNEL_ID);
-            
-            if (!suggestionsChannel) {
-                if (!interaction.replied && !interaction.deferred) {
-                    await interaction.reply({
-                        content: 'Could not find the suggestions channel. Please contact an administrator.',
-                        ephemeral: true
-                    });
-                }
-                return;
-            }
+            // Send to suggestions channel if it exists
+            const suggestionsChannel = interaction.client.channels.cache.find(
+                channel => channel.name === 'suggestions'
+            );
 
-            // Send the suggestion to the channel
-            const message = await suggestionsChannel.send({ embeds: [embed] });
-            
-            // Add reaction buttons
-            await message.react('👍');
-            await message.react('👎');
-
-            if (!interaction.replied && !interaction.deferred) {
+            if (suggestionsChannel) {
+                await suggestionsChannel.send({ embeds: [embed] });
                 await interaction.reply({
-                    content: 'Your suggestion has been submitted! Thank you for your feedback.',
+                    content: 'Thank you for your suggestion! It has been sent to our team.',
+                    ephemeral: true
+                });
+            } else {
+                await interaction.reply({
+                    content: 'Thank you for your suggestion! Unfortunately, the suggestions channel is not available right now.',
                     ephemeral: true
                 });
             }
         } catch (error) {
             console.error('Error in suggest command:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while submitting your suggestion. Please try again later.',
-                    ephemeral: true 
-                });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your suggestion. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };

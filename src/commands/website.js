@@ -11,7 +11,7 @@ module.exports = {
     async execute(interaction) {
         try {
             if (!WEBSITE_URL) {
-                throw new Error('Website URL not configured in environment variables');
+                throw new Error('Website URL not configured');
             }
 
             const embed = new EmbedBuilder()
@@ -37,27 +37,17 @@ module.exports = {
                         .setStyle(ButtonStyle.Link)
                 );
 
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    embeds: [embed],
-                    components: [row],
-                    ephemeral: true
-                });
-            } else if (interaction.deferred) {
-                await interaction.editReply({
-                    embeds: [embed],
-                    components: [row],
-                });
-            }
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in website command:', error);
-            const errorMessage = 'An error occurred while processing your request. Please try again later.';
-            
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ content: errorMessage, ephemeral: true });
-            } else if (interaction.deferred) {
-                await interaction.editReply({ content: errorMessage });
-            }
+            await interaction.reply({ 
+                content: 'An error occurred while processing your request. Please try again later.',
+                ephemeral: true 
+            });
         }
     }
 };
