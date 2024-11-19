@@ -1,37 +1,38 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 require('dotenv').config();
 
+const WEBSITE_URL = process.env.WEBSITE_URL;
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('website')
-        .setDescription('Get Vidi addons website link'),
+        .setDescription('Get Vidi website link'),
 
     async execute(interaction) {
         try {
+            if (!WEBSITE_URL) {
+                throw new Error('Website URL not configured in environment variables');
+            }
+
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Vidi Website')
-                .setDescription('Visit our website for more information and updates.')
+                .setDescription('Visit our website to explore more features!')
                 .addFields(
                     { name: 'Features', value: 
-                        '• Latest news and updates\n' +
-                        '• Documentation\n' +
-                        '• Community forums\n' +
+                        '• Browse our catalog\n' +
+                        '• Latest updates\n' +
+                        '• Community features\n' +
                         '• Support resources'
                     }
                 )
-                .setFooter({ text: 'Vidi Addons' })
+                .setFooter({ text: 'Vidi Website' })
                 .setTimestamp();
-
-            const websiteUrl = process.env.WEBSITE_URL;
-            if (!websiteUrl) {
-                throw new Error('Website URL not configured in environment variables');
-            }
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setURL(websiteUrl)
+                        .setURL(WEBSITE_URL)
                         .setLabel('Visit Website')
                         .setStyle(ButtonStyle.Link)
                 );
@@ -42,14 +43,20 @@ module.exports = {
                     components: [row],
                     ephemeral: true
                 });
+            } else if (interaction.deferred) {
+                await interaction.editReply({
+                    embeds: [embed],
+                    components: [row],
+                });
             }
         } catch (error) {
             console.error('Error in website command:', error);
+            const errorMessage = 'An error occurred while processing your request. Please try again later.';
+            
             if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ 
-                    content: 'An error occurred while processing your request. Please try again later.',
-                    ephemeral: true 
-                });
+                await interaction.reply({ content: errorMessage, ephemeral: true });
+            } else if (interaction.deferred) {
+                await interaction.editReply({ content: errorMessage });
             }
         }
     }

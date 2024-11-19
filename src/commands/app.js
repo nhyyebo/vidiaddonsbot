@@ -1,6 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 require('dotenv').config();
 
+const APP_URL = process.env.APP_URL;
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('app')
@@ -8,12 +10,21 @@ module.exports = {
 
     async execute(interaction) {
         try {
+            if (!APP_URL) {
+                throw new Error('App URL not configured in environment variables');
+            }
+
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('Vidi App')
-                .setDescription('Get started with Vidi on your device.')
+                .setDescription('Download our app to start streaming!')
                 .addFields(
-                    { name: 'Download', value: 'Click the button below to download Vidi.' }
+                    { name: 'Features', value: 
+                        '• Easy to use interface\n' +
+                        '• Multiple streaming sources\n' +
+                        '• Regular updates\n' +
+                        '• Cross-platform support'
+                    }
                 )
                 .setFooter({ text: 'Vidi App' })
                 .setTimestamp();
@@ -21,8 +32,8 @@ module.exports = {
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setURL(process.env.APP_URL || 'https://vidiapp.page.link/download')
-                        .setLabel('Download Vidi')
+                        .setURL(APP_URL)
+                        .setLabel('Download App')
                         .setStyle(ButtonStyle.Link)
                 );
 
