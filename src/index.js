@@ -42,6 +42,10 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    client.user.setPresence({
+        activities: [{ name: 'on Discord iOS', type: 'PLAYING' }],
+        status: 'online'
+    });
 });
 
 // Handle interactions
