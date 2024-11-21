@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 require('dotenv').config();
 
 module.exports = {
@@ -25,6 +25,14 @@ module.exports = {
                 .setFooter({ text: 'Vidi Suggestions' })
                 .setTimestamp();
 
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('markDone')
+                        .setLabel('Mark as Done')
+                        .setStyle(ButtonStyle.Primary)
+                );
+
             const ownerId = process.env.OWNER_ID;
             if (!ownerId) {
                 await interaction.reply({
@@ -35,8 +43,8 @@ module.exports = {
             }
 
             const owner = await interaction.client.users.fetch(ownerId);
-            await owner.send({ embeds: [embed] });
-            
+            await owner.send({ embeds: [embed], components: [row] });
+
             await interaction.reply({
                 content: 'Thank you for your suggestion! It has been sent to our team.',
                 ephemeral: true
