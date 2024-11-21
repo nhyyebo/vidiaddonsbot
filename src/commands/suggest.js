@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 require('dotenv').config();
 
 module.exports = {
@@ -15,24 +15,15 @@ module.exports = {
             const suggestion = interaction.options.getString('suggestion');
             const user = interaction.user;
 
-            const userId = user.id;
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('New Suggestion')
                 .setDescription(suggestion)
                 .addFields(
-                    { name: 'Suggested by', value: `<@${userId}>` }
+                    { name: 'Suggested by', value: user.tag }
                 )
                 .setFooter({ text: 'Vidi Suggestions' })
                 .setTimestamp();
-
-            const row = new ActionRowBuilder()
-                .addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('markDone')
-                        .setLabel('Mark as Done')
-                        .setStyle(ButtonStyle.Primary)
-                );
 
             const ownerId = process.env.OWNER_ID;
             if (!ownerId) {
@@ -44,8 +35,8 @@ module.exports = {
             }
 
             const owner = await interaction.client.users.fetch(ownerId);
-            await owner.send({ embeds: [embed], components: [row] });
-
+            await owner.send({ embeds: [embed] });
+            
             await interaction.reply({
                 content: 'Thank you for your suggestion! It has been sent to our team.',
                 ephemeral: true
