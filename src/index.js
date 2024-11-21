@@ -3,6 +3,7 @@ const path = require('node:path');
 const express = require('express');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { handleCommand } = require('./utils/commandHandler');
+const { deployCommands } = require('./utils/deployCommands');
 require('dotenv').config();
 
 // Initialize Express app for Render
@@ -40,12 +41,17 @@ for (const file of commandFiles) {
     }
 }
 
-client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+function setMobilePresence() {
     client.user.setPresence({
-        activities: [{ name: 'on Discord iOS', type: 'PLAYING' }],
+        activities: [{ name: 'Vidi', type: 'WATCHING' }],
         status: 'online'
     });
+}
+
+client.once('ready', async () => {
+    console.log(`Logged in as ${client.user.tag}!`);
+    await deployCommands();
+    setMobilePresence();
 });
 
 // Handle interactions

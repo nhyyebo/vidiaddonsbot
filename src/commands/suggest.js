@@ -15,12 +15,13 @@ module.exports = {
             const suggestion = interaction.options.getString('suggestion');
             const user = interaction.user;
 
+            const userMention = `<@${user.id}>`;
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('New Suggestion')
                 .setDescription(suggestion)
                 .addFields(
-                    { name: 'Suggested by', value: user.tag }
+                    { name: 'Suggested by', value: userMention }
                 )
                 .setFooter({ text: 'Vidi Suggestions' })
                 .setTimestamp();
