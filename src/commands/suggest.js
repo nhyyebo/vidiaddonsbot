@@ -15,13 +15,13 @@ module.exports = {
             const suggestion = interaction.options.getString('suggestion');
             const user = interaction.user;
 
-            const userMention = `<@${user.id}>`;
+            const userId = user.id;
             const embed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('New Suggestion')
                 .setDescription(suggestion)
                 .addFields(
-                    { name: 'Suggested by', value: userMention }
+                    { name: 'Suggested by', value: `<@${userId}>` }
                 )
                 .setFooter({ text: 'Vidi Suggestions' })
                 .setTimestamp();
@@ -36,20 +36,24 @@ module.exports = {
 
             const ownerId = process.env.OWNER_ID;
             if (!ownerId) {
-                await interaction.reply({
-                    content: 'An error occurred while processing your suggestion. Please try again later.',
-                    ephemeral: true
-                });
+                if (!interaction.replied) {
+                    await interaction.reply({
+                        content: 'An error occurred while processing your suggestion. Please try again later.',
+                        ephemeral: true
+                    });
+                }
                 return;
             }
 
             const owner = await interaction.client.users.fetch(ownerId);
             await owner.send({ embeds: [embed], components: [row] });
-            
-            await interaction.reply({
-                content: 'Thank you for your suggestion! It has been sent to our team.',
-                ephemeral: true
-            });
+
+            if (!interaction.replied) {
+                await interaction.reply({
+                    content: 'Thank you for your suggestion! It has been sent to our team.',
+                    ephemeral: true
+                });
+            }
         } catch (error) {
             console.error('Error in suggest command:', error);
             if (!interaction.replied) {
