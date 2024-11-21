@@ -60,3 +60,24 @@ module.exports = {
         }
     }
 };
+
+// Handle button interactions
+module.exports.handleButtonInteraction = async (interaction) => {
+    if (interaction.customId === 'markDone') {
+        try {
+            const channelId = process.env.DONE_CHANNEL_ID; 
+            const channel = await interaction.client.channels.fetch(channelId);
+            const userId = interaction.message.embeds[0].fields[0].value.match(/\d+/)[0];
+            await channel.send(`The suggestion from <@${userId}> has been marked as done!`);
+            await interaction.reply({ content: 'Marked as done and user notified in the channel.', ephemeral: true });
+        } catch (error) {
+            console.error('Error handling button interaction:', error);
+            if (!interaction.replied) {
+                await interaction.reply({
+                    content: 'An error occurred while processing your request. Please try again later.',
+                    ephemeral: true
+                });
+            }
+        }
+    }
+};
