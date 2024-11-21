@@ -36,24 +36,20 @@ module.exports = {
 
             const ownerId = process.env.OWNER_ID;
             if (!ownerId) {
-                if (!interaction.replied) {
-                    await interaction.reply({
-                        content: 'An error occurred while processing your suggestion. Please try again later.',
-                        ephemeral: true
-                    });
-                }
+                await interaction.reply({
+                    content: 'An error occurred while processing your suggestion. Please try again later.',
+                    ephemeral: true
+                });
                 return;
             }
 
             const owner = await interaction.client.users.fetch(ownerId);
             await owner.send({ embeds: [embed], components: [row] });
 
-            if (!interaction.replied) {
-                await interaction.reply({
-                    content: 'Thank you for your suggestion! It has been sent to our team.',
-                    ephemeral: true
-                });
-            }
+            await interaction.reply({
+                content: 'Thank you for your suggestion! It has been sent to our team.',
+                ephemeral: true
+            });
         } catch (error) {
             console.error('Error in suggest command:', error);
             if (!interaction.replied) {
