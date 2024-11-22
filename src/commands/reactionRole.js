@@ -1,7 +1,10 @@
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, SlashCommandBuilder } = require('discord.js');
 require('dotenv').config();
 
 module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('reactionrole')
+        .setDescription('Assigns a role based on reaction'),
     name: 'reactionrole',
     description: 'Assigns a role based on reaction',
     execute(message, args) {
