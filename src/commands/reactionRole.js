@@ -10,8 +10,14 @@ module.exports = {
     execute(message, args) {
         const roleId = process.env.REACTION_ROLE_ID;
         const adminRoleId = process.env.ADMIN_ROLE_ID;
+        const devRoleId = process.env.DEV_ROLE_ID;
+        const modRoleId = process.env.MOD_ROLE_ID;
+        const ownerId = process.env.OWNER_ID;
 
-        if (!message.member.roles.cache.has(adminRoleId)) {
+        if (!message.member.roles.cache.has(adminRoleId) &&
+            !message.member.roles.cache.has(devRoleId) &&
+            !message.member.roles.cache.has(modRoleId) &&
+            message.author.id !== ownerId) {
             return message.reply('You do not have permission to use this command.');
         }
 
