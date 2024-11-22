@@ -7,9 +7,8 @@ module.exports = {
     execute(message, args) {
         const roleId = process.env.REACTION_ROLE_ID;
         const adminRoleId = process.env.ADMIN_ROLE_ID;
-        const userId = process.env.USER_ID;
 
-        if (!message.member.roles.cache.has(adminRoleId) && message.author.id !== userId) {
+        if (!message.member.roles.cache.has(adminRoleId)) {
             return message.reply('You do not have permission to use this command.');
         }
 
@@ -17,20 +16,31 @@ module.exports = {
             return !user.bot;
         };
 
-        message.channel.send('React to this message to get the role!').then(sentMessage => {
-            sentMessage.react('👍');
+        try {
+            message.channel.send('React to this message to get the member role!').then(sentMessage => {
+                sentMessage.react('👍');
 
-            const collector = sentMessage.createReactionCollector({ filter, dispose: true });
+                const collector = sentMessage.createReactionCollector({ filter, dispose: true });
 
-            collector.on('collect', (reaction, user) => {
-                const member = message.guild.members.cache.get(user.id);
-                member.roles.add(roleId).catch(console.error);
+                collector.on('collect', (reaction, user) => {
+                    const member = message.guild.members.cache.get(user.id);
+                    member.roles.add(roleId).catch(error => {
+                        console.error('Failed to add role:', error);
+                        message.channel.send(`Failed to add role to ${user.username}.`);
+                    });
+                });
+
+                collector.on('remove', (reaction, user) => {
+                    const member = message.guild.members.cache.get(user.id);
+                    member.roles.remove(roleId).catch(error => {
+                        console.error('Failed to remove role:', error);
+                        message.channel.send(`Failed to remove role from ${user.username}.`);
+                    });
+                });
             });
-
-            collector.on('remove', (reaction, user) => {
-                const member = message.guild.members.cache.get(user.id);
-                member.roles.remove(roleId).catch(console.error);
-            });
-        });
+        } catch (error) {
+            console.error('Error sending message or setting up collector:', error);
+            message.channel.send('An error occurred while setting up the reaction role.');
+        }
     },
 };
