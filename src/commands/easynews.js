@@ -13,6 +13,7 @@ module.exports = {
                 .setColor('#0099ff')
                 .setTitle('Easynews')
                 .setDescription('Access Usenet content with Easynews.')
+                .setImage('https://vidi-addons.netlify.app/addonicons/easynews.jpeg')
                 .addFields(
                     { name: 'Features', value: 
                         '• Browser-based access\n' +

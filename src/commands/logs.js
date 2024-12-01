@@ -1,4 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+require('dotenv').config();
+
+const ADMIN_ROLE_ID = process.env.ADMIN_ROLE_ID;
+const DEV_ROLE_ID = process.env.DEV_ROLE_ID;
+const MOD_ROLE_ID = process.env.MOD_ROLE_ID;
+const OWNER_ID = process.env.OWNER_ID;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,10 +13,14 @@ module.exports = {
 
     async execute(interaction) {
         try {
-            // Check if user has admin permissions
-            if (!interaction.member.permissions.has('ADMINISTRATOR')) {
+            // Check if user has the required roles or is the owner
+            const hasPermission = interaction.member.roles.cache.some(role => 
+                [ADMIN_ROLE_ID, DEV_ROLE_ID, MOD_ROLE_ID].includes(role.id)
+            ) || interaction.user.id === OWNER_ID;
+
+            if (!hasPermission) {
                 await interaction.reply({
-                    content: 'You do not have permission to use this command.',
+                    content: 'You need to be an Admin, Dev, Mod, or the Owner to use this command.',
                     ephemeral: true
                 });
                 return;

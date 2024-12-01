@@ -10,9 +10,10 @@ module.exports = {
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
-                .setColor('#0099ff')
+                .setColor('#00c9a5')
                 .setTitle('Cinemeta')
                 .setDescription('Access metadata for movies and TV shows.')
+                .setImage('https://vidi-addons.netlify.app/addonicons/cine.jpeg')
                 .addFields(
                     { name: 'Features', value: 
                         '• Movie and TV show metadata\n' +

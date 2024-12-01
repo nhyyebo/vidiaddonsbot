@@ -12,15 +12,15 @@ module.exports = {
                 .setTitle('Vidi Help')
                 .setDescription('Here are some helpful resources:')
                 .addFields(
-                    { name: 'Discord Support', value: 'Join our Discord server for community support.' },
-                    { name: 'Documentation', value: 'Visit our website for detailed documentation.' },
-                    { name: 'Common Issues', value: 
-                        '• Installation problems\n' +
-                        '• Configuration help\n' +
-                        '• Addon troubleshooting\n' +
-                        '• General questions'
+                    { name: 'Discord Support', value: '@Nhyira for specific addon help!' },
+                    
+                    { name: 'Must Have', value: 
+                        '• Cinemeta\n' +
+                        '• Torrentio \n' 
+                        
                     },
-                    { name: 'Need More Help?', value: 'Use `/suggest` to submit specific questions or issues.' }
+                    { name: 'Have a suggestion?', value: 'Use `/suggest` to submit specific questions or issues.' },
+                    { name: 'Note', value: 'Please use /help for all the commands, with love from Vidi staff!' }
                 )
                 .setFooter({ text: 'Vidi Support' })
                 .setTimestamp();

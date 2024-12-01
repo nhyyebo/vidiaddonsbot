@@ -1,33 +1,32 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const MANIFEST_URL = 'https://vidibot.netlify.app/animekitsu';
-const CONFIGURE_URL = 'https://b89262c192b0-stremio-animekitsu-addon.baby-beamup.club/configure';
+const GUIDE_URL = 'https://vidi-addons.netlify.app/torbox-guide.html';
+const CONFIGURE_URL = 'https://torbox.app/settings';
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('animekitsu')
-        .setDescription('Install and configure Animekitsu addon'),
+        .setName('torbox')
+        .setDescription('Guide and configure Torobx with Vidi '),
 
     async execute(interaction) {
         try {
             const embed = new EmbedBuilder()
-                .setColor('#ad0603')
-                .setTitle('Animekitsu')
-                .setDescription('Access anime content and catalogs.')
-                .setImage('https://vidi-addons.netlify.app/addonicons/anime-modified.png')
+                .setColor('#51f542')
+                .setTitle('Torbox')
+                .setDescription('Access content from Torbox')
                 .addFields(
-                    { name: 'Installation', value: 'Click Install to add Animekitsu.' },
-                    { name: 'Configuration', value: 'Click Configure to set up your preferences.' }
+                    { name: 'Guide', value: 'Click for a step-by-step guide to Torbox with Vidi' },
+                    { name: 'Configuration', value: 'After installation, use Configure to set up your preferences.' }
                 )
-                .setFooter({ text: 'Animekitsu Addon' })
+                .setImage('https://vidi-addons.netlify.app/addonicons/torbox.png')
+                .setFooter({ text: 'Torbox Addon' })
                 .setTimestamp();
-                
 
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setURL(MANIFEST_URL)
-                        .setLabel('Install')
+                        .setURL(GUIDE_URL)
+                        .setLabel('Guide')
                         .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
@@ -41,7 +40,7 @@ module.exports = {
                 ephemeral: true
             });
         } catch (error) {
-            console.error('Error in Animekitsu command:', error);
+            console.error('Error in Torbox command:', error);
             await interaction.reply({ 
                 content: 'An error occurred while processing your request. Please try again later.',
                 ephemeral: true 

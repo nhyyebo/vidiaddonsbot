@@ -48,4 +48,18 @@ async function handleCommand(command, interaction) {
     }
 }
 
-module.exports = { handleCommand };
+async function handleInteraction(interaction) {
+    if (interaction.isChatInputCommand()) {
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+
+        await handleCommand(command, interaction);
+    } else if (interaction.isButton()) {
+        const command = client.commands.get('recommend');
+        if (interaction.customId.startsWith('more_info_')) {
+            await command.handleMoreInfo(interaction);
+        }
+    }
+}
+
+module.exports = { handleCommand, handleInteraction };

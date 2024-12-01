@@ -14,9 +14,10 @@ module.exports = {
                 .setColor('#0099ff')
                 .setTitle('Comet')
                 .setDescription('Access content from various streaming sources.')
+                .setImage(' https://vidi-addons.netlify.app/addonicons/comet-modified.png')
                 .addFields(
                     { name: 'Installation', value: 'Click the button below to install Comet.' },
-                    { name: 'Configuration', value: 'After installation, configure Comet with your preferences.' }
+                    { name: 'Configuration', value: 'Configure Comet with your preferences.' }
                 )
                 .setFooter({ text: 'Comet Addon' })
                 .setTimestamp();

@@ -14,22 +14,27 @@ module.exports = {
                 .addFields(
                     { name: 'App & Website', value: 
                         '`/app` - Get Vidi app download link\n' +
-                        '`/website` - Get Vidi website link'
+                        '`/website` - Get Vidi Addons website link'
                     },
-                    { name: 'Addons', value: 
+                    { name: 'Metadata', value: 
+                        '`/cinemeta` - Install Cinemeta addon\n' +
+                        '`/tmdb` - Get TMDb addon \n' 
+                        
+                    },
+                    { name: 'Debrid Addons', value: 
                         '`/comet` - Install Comet addon\n' +
                         '`/easynews` - Get Easynews signup\n' +
                         '`/torrentio` - Install Torrentio addon\n' +
                         '`/jackett` - Install Jackett addon'
                     },
-                    { name: 'Media Sources', value: 
-                        '`/tmdb` - Search TMDb\n' +
-                        '`/imdb` - Search IMDb\n' +
-                        '`/trakt` - Search Trakt\n' +
-                        '`/letterboxd` - Search Letterboxd'
+                    { name: 'Catalogs', value: 
+                        '`/imdb` - Imdb catalog\n' +
+                        '`/trakt` - Trakt catalog\n' +
+                        '`/streamingcatalogs` - Streaming Services catalogs\n' +
+                        '`/letterboxd` - Letterboxd catalog'
                     },
                     { name: 'Subtitles', value: 
-                        '`/opensubtitles` - Search OpenSubtitles\n' +
+                        '`/opensubtitles` - OpenSubtitles catalog\n' +
                         '`/subsource` - Install Subsource addon'
                     },
                     { name: 'Other', value: 

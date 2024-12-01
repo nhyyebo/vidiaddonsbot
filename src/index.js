@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, ActivityType } = require('discord.js');
 const { handleCommand } = require('./utils/commandHandler');
 const { deployCommands } = require('./utils/deployCommands');
 require('dotenv').config();
@@ -43,7 +43,7 @@ for (const file of commandFiles) {
 
 function setMobilePresence() {
     client.user.setPresence({
-        activities: [{ name: 'Vidi', type: 'WATCHING' }],
+        activities: [{ name: '/dmhelp', type: ActivityType.Playing }],
         status: 'online'
     });
 }
