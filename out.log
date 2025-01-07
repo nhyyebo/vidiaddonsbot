@@ -11,9 +11,6 @@ Server is running on port 3000
 Logged in as Vidi Addons#5481!
 Started refreshing 23 application (/) commands.
 Successfully reloaded 23 application (/) commands.
-Error handling button interaction: TypeError: Cannot read properties of null (reading '0')
-    at Client.<anonymous> (C:\Users\nhyir\Desktop\Code\vidibot\src\index.js:79:86)
-    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 Server is running on port 3000
 Logged in as Vidi Addons#5481!
 Started refreshing 23 application (/) commands.
