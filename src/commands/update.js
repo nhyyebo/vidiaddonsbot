@@ -22,11 +22,9 @@ module.exports = {
                 .setDescription('I\'ve just been updated!')
                 .addFields(
                     { name: 'Latest Changes', value: 
-                        '• Refined dmhelp command\n' +
-                        '• Added new update command\n' +
-                        '• Improved addon documentation'
-                    },
-                    { name: 'Version', value: '1.0.1', inline: true },
+                        '• Im just better now\n' +
+                        ' '},
+                    { name: 'Version', value: '2.0', inline: true },
                     { name: 'Date', value: new Date().toLocaleDateString(), inline: true }
                 )
                 .setFooter({ text: 'Update by Nhyira' })

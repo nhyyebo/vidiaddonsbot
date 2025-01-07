@@ -28,7 +28,7 @@ module.exports = {
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install')
+                        .setLabel('🔗Install')
                         .setStyle(ButtonStyle.Link)
                 );
 

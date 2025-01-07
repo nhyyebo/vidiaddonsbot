@@ -25,11 +25,11 @@ module.exports = {
                 .addComponents(
                     new ButtonBuilder()
                         .setURL(MANIFEST_URL)
-                        .setLabel('Install')
+                        .setLabel('🔗Install')
                         .setStyle(ButtonStyle.Link),
                     new ButtonBuilder()
                         .setURL(CONFIGURE_URL)
-                        .setLabel('Configure')
+                        .setLabel('⚙️Configure')
                         .setStyle(ButtonStyle.Link)
                 );
 
